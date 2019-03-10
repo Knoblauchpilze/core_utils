@@ -6,6 +6,7 @@
 
 # include "CoreLogLevel.hh"
 # include "CoreStreamFormatter.hh"
+# include "CoreLoggingDevice.hh"
 
 namespace core {
   namespace utils {
@@ -38,6 +39,9 @@ namespace core {
 
         void
         setLevel(const Level& level) noexcept;
+
+        void
+        setLoggingDevice(LoggingDeviceShPtr device);
 
         void
         disableLog() noexcept;
@@ -111,6 +115,8 @@ namespace core {
         std::string m_name;
         std::string m_environment;
         StreamFormatter m_formatter;
+
+        LoggingDeviceShPtr m_loggingDevice;
     };
 
   }

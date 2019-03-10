@@ -18,7 +18,9 @@ namespace core {
       m_level(Level::Debug),
       m_name("default logger"),
       m_environment("local"),
-      m_formatter()
+      m_formatter(),
+
+      m_loggingDevice(std::make_shared<LoggingDevice>())
     {}
 
     inline
@@ -52,23 +54,28 @@ namespace core {
         return;
       }
 
+      std::stringstream output;
 
       // Use the first color to print the application and instance name.
-      m_formatter.setStreamColor(std::cout, StreamFormatter::Color::Magenta);
-      std::cout << "[" << m_name << "] ";
-      std::cout << getTimestamp() << " ";
+      m_formatter.setStreamColor(output, StreamFormatter::Color::Magenta);
+      output << "[" << m_name << "] ";
+      output << getTimestamp() << " ";
 
-      m_formatter.setStreamColor(std::cout, color);
-      std::cout << "[" << convertLevelToLevelString(level) << "]" << " [" << module << "] ";
-      m_formatter.clearStreamFormat(std::cout);
+      m_formatter.setStreamColor(output, color);
+      output << "[" << convertLevelToLevelString(level) << "]" << " [" << module << "] ";
+      m_formatter.clearStreamFormat(output);
 
-      std::cout << message;
+      output << message;
 
       if (!cause.empty()) {
-        std::cout << " (cause: \"" << cause << "\")";
+        output << " (cause: \"" << cause << "\")";
       }
 
-      std::cout << std::endl;
+      output << std::endl;
+
+      if (m_loggingDevice != nullptr) {
+        m_loggingDevice->log(output.str());
+      }
     }
 
   }

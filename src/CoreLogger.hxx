@@ -55,6 +55,13 @@ namespace core {
 
     inline
     void
+    Logger::setLoggingDevice(std::shared_ptr<LoggingDevice> device) {
+      std::lock_guard<std::mutex> lock(m_locker);
+      m_loggingDevice = device;
+    }
+
+    inline
+    void
     Logger::disableLog() noexcept {
       std::lock_guard<std::mutex> lock(m_locker);
       m_enableLog = false;
