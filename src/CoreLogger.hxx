@@ -15,28 +15,28 @@ namespace utils {
     inline
     std::string
     Logger::getName() const noexcept {
-      std::lock_guard<std::mutex> lock(m_locker);
+      std::lock_guard<std::mutex> lock(*m_locker);
       return m_name;
     }
 
     inline
     void
     Logger::setName(const std::string& name) noexcept {
-      std::lock_guard<std::mutex> lock(m_locker);
+      std::lock_guard<std::mutex> lock(*m_locker);
       m_name = name;
     }
 
     inline
     std::string
     Logger::getEnvironment() const noexcept {
-      std::lock_guard<std::mutex> lock(m_locker);
+      std::lock_guard<std::mutex> lock(*m_locker);
       return m_environment;
     }
 
     inline
     void
     Logger::setEnvironment(const std::string& environment) noexcept {
-      std::lock_guard<std::mutex> lock(m_locker);
+      std::lock_guard<std::mutex> lock(*m_locker);
       m_environment = environment;
     }
 
@@ -49,21 +49,21 @@ namespace utils {
     inline
     void
     Logger::setLevel(const Level& level) noexcept {
-      std::lock_guard<std::mutex> lock(m_locker);
+      std::lock_guard<std::mutex> lock(*m_locker);
       m_level = level;
     }
 
     inline
     void
     Logger::setLoggingDevice(std::shared_ptr<LoggingDevice> device) {
-      std::lock_guard<std::mutex> lock(m_locker);
+      std::lock_guard<std::mutex> lock(*m_locker);
       m_loggingDevice = device;
     }
 
     inline
     void
     Logger::disableLog() noexcept {
-      std::lock_guard<std::mutex> lock(m_locker);
+      std::lock_guard<std::mutex> lock(*m_locker);
       m_enableLog = false;
     }
 

@@ -12,15 +12,15 @@ namespace utils {
 
     Logger Logger::s_logger;
 
-    Logger::Logger():
-      m_locker(),
+    Logger::Logger(LoggingDeviceShPtr device):
+      m_locker(std::make_shared<std::mutex>()),
       m_enableLog(true),
       m_level(Level::Debug),
       m_name("default logger"),
       m_environment("local"),
       m_formatter(),
 
-      m_loggingDevice(std::make_shared<LoggingDevice>())
+      m_loggingDevice(device)
     {}
 
     inline
@@ -44,7 +44,7 @@ namespace utils {
                      const std::string& cause) const noexcept
     {
       // Acquire the lock on the internal mutex.
-      std::lock_guard<std::mutex> lock(m_locker);
+      std::lock_guard<std::mutex> lock(*m_locker);
 
       // Check whether the message should be logged.
       if (!m_enableLog) {
@@ -70,8 +70,6 @@ namespace utils {
       if (!cause.empty()) {
         output << " (cause: \"" << cause << "\")";
       }
-
-      output << std::endl;
 
       if (m_loggingDevice != nullptr) {
         m_loggingDevice->log(output.str());

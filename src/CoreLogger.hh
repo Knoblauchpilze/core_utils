@@ -3,6 +3,7 @@
 
 # include <mutex>
 # include <string>
+# include <memory>
 
 # include "CoreLogLevel.hh"
 # include "CoreStreamFormatter.hh"
@@ -14,7 +15,7 @@ namespace utils {
     class Logger {
       public:
 
-        Logger();
+        Logger(LoggingDeviceShPtr device = nullptr);
 
         ~Logger() = default;
 
@@ -85,7 +86,7 @@ namespace utils {
         logMessage(const Level& level,
                    const std::string& message,
                    const std::string& module,
-                   const std::string& cause) const noexcept;
+                   const std::string& cause = std::string()) const noexcept;
 
       private:
 
@@ -109,7 +110,7 @@ namespace utils {
         */
         static Logger s_logger;
 
-        mutable std::mutex m_locker;
+        mutable std::shared_ptr<std::mutex> m_locker;
         bool m_enableLog;
         Level m_level;
         std::string m_name;
@@ -119,6 +120,7 @@ namespace utils {
         LoggingDeviceShPtr m_loggingDevice;
     };
 
+    using LoggerShPtr = std::shared_ptr<Logger>;
   }
 }
 
