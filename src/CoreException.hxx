@@ -3,8 +3,8 @@
 
 # include "CoreException.hh"
 
-namespace core {
-  namespace utils {
+namespace utils {
+  namespace core {
 
     inline
     CoreException::CoreException(const std::string& message,

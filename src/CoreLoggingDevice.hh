@@ -5,8 +5,8 @@
 # include <string>
 # include <memory>
 
-namespace core {
-  namespace utils {
+namespace utils {
+  namespace core {
 
     class LoggingDevice {
       public:

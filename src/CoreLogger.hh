@@ -8,8 +8,8 @@
 # include "CoreStreamFormatter.hh"
 # include "CoreLoggingDevice.hh"
 
-namespace core {
-  namespace utils {
+namespace utils {
+  namespace core {
 
     class Logger {
       public:

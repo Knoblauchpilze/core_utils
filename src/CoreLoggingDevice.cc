@@ -3,8 +3,8 @@
 
 # include <iostream>
 
-namespace core {
-  namespace utils {
+namespace utils {
+  namespace core {
 
     void
     LoggingDevice::log(const std::string& message) const noexcept {

@@ -3,8 +3,8 @@
 
 # include "CoreLogger.hh"
 
-namespace core {
-  namespace utils {
+namespace utils {
+  namespace core {
 
     inline
     Logger&

@@ -4,8 +4,8 @@
 # include <string>
 # include <functional>
 
-namespace core {
-  namespace utils {
+namespace utils {
+  namespace core {
 
     void
     launchProtected(std::function<void(void)> func,

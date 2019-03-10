@@ -3,8 +3,8 @@
 
 # include "CoreStreamFormatter.hh"
 
-namespace core {
-  namespace utils {
+namespace utils {
+  namespace core {
 
     inline
     void

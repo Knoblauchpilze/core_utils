@@ -7,8 +7,8 @@
 # include <sstream>
 # include <iostream>
 
-namespace core {
-  namespace utils {
+namespace utils {
+  namespace core {
 
     Logger Logger::s_logger;
 

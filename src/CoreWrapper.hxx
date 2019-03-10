@@ -6,8 +6,8 @@
 # include "CoreLogger.hh"
 # include "CoreException.hh"
 
-namespace core {
-  namespace utils {
+namespace utils {
+  namespace core {
 
     inline
     void

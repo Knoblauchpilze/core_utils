@@ -6,8 +6,8 @@
 
 # include "CoreLogger.hh"
 
-namespace core {
-  namespace utils {
+namespace utils {
+  namespace core {
 
     const unsigned CoreException::sk_stackTraceDepth = 32u;
 
@@ -35,7 +35,7 @@ namespace core {
 
     void
     CoreException::logError(const Level& level) const {
-      core::utils::Logger::getInstance().logMessage(
+      Logger::getInstance().logMessage(
         level,
         getMessage(),
         getModule(),

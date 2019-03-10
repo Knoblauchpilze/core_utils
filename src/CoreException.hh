@@ -4,8 +4,8 @@
 # include <stdexcept>
 # include "CoreLogLevel.hh"
 
-namespace core {
-  namespace utils {
+namespace utils {
+  namespace core {
 
     class CoreException: public std::exception {
       public:

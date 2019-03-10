@@ -3,8 +3,8 @@
 
 # include <string>
 
-namespace core {
-  namespace utils {
+namespace utils {
+  namespace core {
 
     // Various levels of logs.
     enum class Level {
