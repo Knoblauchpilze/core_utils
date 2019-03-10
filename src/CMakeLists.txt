@@ -6,6 +6,8 @@ set (CMAKE_CXX_STANDARD 14)
 set (CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 set (SOURCES
+  CoreException.cc
+  CoreLogger.cc
   )
 
 add_library (core_utils SHARED
