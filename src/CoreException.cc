@@ -34,8 +34,7 @@ namespace core {
     }
 
     void
-    CoreException::logError(const Level& level) const
-    {
+    CoreException::logError(const Level& level) const {
       core::utils::Logger::getInstance().logMessage(
         level,
         getMessage(),
