@@ -123,6 +123,9 @@ namespace utils {
         case Level::Info:
           logInfo(message, module, cause);
           break;
+        case Level::Notice:
+          logNotice(message, module, cause);
+          break;
         case Level::Warning:
           logWarning(message, module, cause);
           break;
