@@ -5,14 +5,13 @@
 # include <functional>
 
 namespace utils {
-  namespace core {
 
-    void
-    launchProtected(std::function<void(void)> func,
-                    const std::string& functionName,
-                    const std::string& module);
+  void
+  launchProtected(std::function<void(void)> func,
+                  const std::string& functionName,
+                  const std::string& module,
+                  const std::string& service);
 
-  }
 }
 
 # include "CoreWrapper.hxx"

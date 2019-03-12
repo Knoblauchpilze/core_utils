@@ -2,73 +2,80 @@
 # define   CORE_EXCEPTION_HH
 
 # include <stdexcept>
-# include "CoreLogLevel.hh"
+# include "LogLevel.hh"
 
 namespace utils {
-  namespace core {
 
-    class CoreException: public std::exception {
-      public:
+  class CoreException: public std::exception {
+    public:
 
-        CoreException(const std::string& message = std::string("Unexpected exception"),
-                      const std::string& module = std::string(),
-                      const std::string& cause = std::string(),
-                      const Level& level = Level::Error);
+      CoreException(const std::string& message = std::string("Unexpected exception"),
+                    const std::string& module = std::string(),
+                    const std::string& service = std::string(),
+                    const std::string& cause = std::string(),
+                    const Level& level = Level::Error);
 
-        CoreException(const std::string& message,
-                      const std::string& module,
-                      const CoreException& cause,
-                      const Level& level = Level::Error);
+      CoreException(const std::string& message,
+                    const std::string& module,
+                    const std::string& service,
+                    const CoreException& cause,
+                    const Level& level = Level::Error);
 
-        virtual ~CoreException() = default;
+      virtual ~CoreException() = default;
 
-        const char*
-        what() const throw() override;
+      const char*
+      what() const throw() override;
 
-        std::string
-        getFormattedMessage() const noexcept;
+      std::string
+      getFormattedMessage() const noexcept;
 
-      protected:
+    protected:
 
-        bool
-        hasMessage() const noexcept;
+      bool
+      hasMessage() const noexcept;
 
-        const std::string&
-        getMessage() const noexcept;
+      const std::string&
+      getMessage() const noexcept;
 
-        const std::string&
-        getModule() const noexcept;
+      bool
+      hasModule() const noexcept;
 
-        bool
-        hasModule() const noexcept;
+      const std::string&
+      getModule() const noexcept;
 
-        const std::string&
-        getCause() const noexcept;
+      bool
+      hasService() const noexcept;
 
-        bool
-        hasCause() const noexcept;
+      const std::string&
+      getService() const noexcept;
 
-      private:
+      const std::string&
+      getCause() const noexcept;
 
-        std::string
-        retrieveStackTrace() const noexcept;
+      bool
+      hasCause() const noexcept;
 
-        void
-        logError(const Level& level) const;
+    private:
 
-      private:
+      std::string
+      retrieveStackTrace() const noexcept;
 
-        /**
-         * @brief - The maximum stack trace level handled by this kind of exceptions.
-         */
-        static const unsigned sk_stackTraceDepth;
+      void
+      logError(const Level& level) const;
 
-        std::string m_message;
-        std::string m_module;
-        std::string m_cause;
-    };
+    private:
 
-  }
+      /**
+       * @brief - The maximum stack trace level handled by this kind of exceptions.
+       */
+      static const unsigned sk_stackTraceDepth;
+
+      std::string m_message;
+      std::string m_module;
+      std::string m_service;
+      std::string m_cause;
+  };
+
 }
 
 # include "CoreException.hxx"

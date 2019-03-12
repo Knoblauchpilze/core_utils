@@ -7,8 +7,8 @@ set (CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 set (SOURCES
   CoreException.cc
-  CoreLogger.cc
-  CoreLoggingDevice.cc
+  StdLogger.cc
+  LoggerLocator.cc
   )
 
 add_library (core_utils SHARED
