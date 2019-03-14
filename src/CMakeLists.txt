@@ -9,6 +9,7 @@ set (SOURCES
   CoreException.cc
   StdLogger.cc
   LoggerLocator.cc
+  CoreObject.cc
   )
 
 add_library (core_utils SHARED
