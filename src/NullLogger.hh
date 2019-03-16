@@ -1,9 +1,7 @@
 #ifndef    NULL_LOGGER_HH
 # define   NULL_LOGGER_HH
 
-# include <mutex>
 # include <string>
-# include <memory>
 
 # include "Logger.hh"
 
