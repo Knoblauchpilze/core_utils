@@ -33,7 +33,6 @@ namespace utils {
 
   void
   CoreException::logError(const Level& level) const {
-    // TODO: Add some kind of logging mechanism ?
     LoggerLocator::getLogger().logMessage(
       level,
       getMessage(),
