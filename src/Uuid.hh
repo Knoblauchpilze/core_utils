@@ -11,10 +11,10 @@ namespace utils {
 
       Uuid();
 
-      Uuid(const Uuid& uuid) = delete;
+      Uuid(const Uuid& uuid);
 
       Uuid&
-      operator=(const Uuid& rhs) = delete;
+      operator=(const Uuid& rhs) noexcept;
 
       bool
       operator==(const Uuid& rhs) const noexcept;
@@ -28,10 +28,19 @@ namespace utils {
       std::string
       toString() const noexcept;
 
+      bool
+      valid() const noexcept;
+
+      static
+      Uuid
+      create();
+
     private:
 
+      Uuid(const bool valid);
+
       void
-      create() noexcept;
+      generate() noexcept;
 
     private:
 

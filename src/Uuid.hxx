@@ -8,27 +8,45 @@ namespace utils {
 
   inline
   Uuid::Uuid():
-    m_data(sk_uuidLength)
-  {
-    create();
+    m_data()
+  {}
+
+  inline
+  Uuid::Uuid(const Uuid& uuid):
+    m_data(uuid.m_data)
+  {}
+
+  inline
+  Uuid&
+  Uuid::operator=(const Uuid& rhs) noexcept {
+    if (rhs != *this) {
+      m_data = rhs.m_data;
+    }
+
+    return *this;
   }
 
   inline
   bool
   Uuid::operator==(const Uuid& rhs) const noexcept {
-    return !operator!=(rhs);
-  }
+    // Check for invalid uuids.
+    if (!valid() && !rhs.valid()) {
+      return true;
+    }
+    if (valid() && !rhs.valid()) {
+      return false;
+    }
+    if (!valid() && rhs.valid()) {
+      return false;
+    }
 
-  inline
-  bool
-  Uuid::operator!=(const Uuid& rhs) const noexcept {
     unsigned index = 0u;
     while (index < m_data.size() && m_data[index] == rhs.m_data[index]) {
       ++index;
     }
 
     if (index >= m_data.size()) {
-      return false;
+      return true;
     }
 
     return m_data[index] == rhs.m_data[index];
@@ -36,7 +54,24 @@ namespace utils {
 
   inline
   bool
+  Uuid::operator!=(const Uuid& rhs) const noexcept {
+    return !operator==(rhs);
+  }
+
+  inline
+  bool
   Uuid::operator<(const Uuid& rhs) const noexcept {
+    // Check for invalid uuids.
+    if (!valid() && !rhs.valid()) {
+      return false;
+    }
+    if (valid() && !rhs.valid()) {
+      return false;
+    }
+    if (!valid() && rhs.valid()) {
+      return true;
+    }
+
     unsigned index = 0u;
     while (index < m_data.size() && m_data[index] < rhs.m_data[index]) {
       ++index;
@@ -65,8 +100,27 @@ namespace utils {
   }
 
   inline
+  Uuid
+  Uuid::create() {
+    return Uuid(true);
+  }
+
+  inline
+  bool
+  Uuid::valid() const noexcept {
+    return !m_data.empty();
+  }
+
+  inline
+  Uuid::Uuid(const bool /*valid*/):
+    m_data(sk_uuidLength)
+  {
+    generate();
+  }
+
+  inline
   void
-  Uuid::create() noexcept {
+  Uuid::generate() noexcept {
     std::string chars = "abcdef0123456789";
 
     std::random_device seed;
