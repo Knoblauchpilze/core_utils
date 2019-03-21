@@ -33,7 +33,7 @@ namespace utils {
     m_scopes.push(
       std::make_pair(
         message,
-        std::chrono::high_resolution_clock::now()
+        std::chrono::steady_clock::now()
       )
     );
   }
@@ -57,7 +57,7 @@ namespace utils {
   void
   Chrono<Duration>::finalize(const TimeScope& scope) {
     // Compute the duration of this scope.
-    Timestamp now = std::chrono::system_clock::now();
+    Timestamp now = std::chrono::steady_clock::now();
     int duration = std::chrono::duration_cast<Duration>(now - scope.second).count();
 
     // Log the message.
@@ -74,7 +74,7 @@ namespace utils {
   void
   Chrono<std::chrono::milliseconds>::finalize(const TimeScope& scope) {
     // Compute the duration of this scope.
-    Timestamp now = std::chrono::system_clock::now();
+    Timestamp now = std::chrono::steady_clock::now();
     int duration = std::chrono::duration_cast<std::chrono::milliseconds>(now - scope.second).count();
 
     // Log the message.
@@ -86,7 +86,7 @@ namespace utils {
   void
   Chrono<std::chrono::seconds>::finalize(const TimeScope& scope) {
     // Compute the duration of this scope.
-    Timestamp now = std::chrono::system_clock::now();
+    Timestamp now = std::chrono::steady_clock::now();
     int duration = std::chrono::duration_cast<std::chrono::seconds>(now - scope.second).count();
 
     // Log the message.
@@ -98,7 +98,7 @@ namespace utils {
   void
   Chrono<std::chrono::microseconds>::finalize(const TimeScope& scope) {
     // Compute the duration of this scope.
-    Timestamp now = std::chrono::system_clock::now();
+    Timestamp now = std::chrono::steady_clock::now();
     int duration = std::chrono::duration_cast<std::chrono::microseconds>(now - scope.second).count();
 
     // Log the message.
