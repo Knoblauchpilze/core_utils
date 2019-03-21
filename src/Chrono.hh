@@ -25,7 +25,7 @@ namespace utils {
 
     private:
 
-      using Timestamp =std::chrono::time_point<std::chrono::system_clock>;
+      using Timestamp = std::chrono::time_point<std::chrono::system_clock>;
       using TimeScope = std::pair<std::string, Timestamp>;
 
       void
