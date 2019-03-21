@@ -31,6 +31,9 @@ namespace utils {
       bool
       valid() const noexcept;
 
+      void
+      invalidate() noexcept;
+
       static
       Uuid
       create();
@@ -58,5 +61,6 @@ std::ostream&
 operator<<(std::ostream& out, const utils::Uuid& uuid) noexcept;
 
 # include "Uuid.hxx"
+# include "Uuid_specialization.hxx"
 
 #endif    /* UUID_HH */

@@ -96,19 +96,29 @@ namespace utils {
       }
     }
 
+    if (!valid()) {
+      display += "NaUuid";
+    }
+
     return display;
   }
 
   inline
-  Uuid
-  Uuid::create() {
-    return Uuid(true);
+  void
+  Uuid::invalidate() noexcept {
+    m_data.clear();
   }
 
   inline
   bool
   Uuid::valid() const noexcept {
     return !m_data.empty();
+  }
+
+  inline
+  Uuid
+  Uuid::create() {
+    return Uuid(true);
   }
 
   inline
@@ -135,11 +145,13 @@ namespace utils {
 
 }
 
+inline
 std::ostream&
 operator<<(const utils::Uuid& uuid, std::ostream& out) noexcept {
   return operator<<(out, uuid);
 }
 
+inline
 std::ostream&
 operator<<(std::ostream& out, const utils::Uuid& uuid) noexcept {
   out << uuid.toString();
