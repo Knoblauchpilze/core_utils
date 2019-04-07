@@ -1,5 +1,5 @@
-#ifndef    UUID_SPECIALIZATION_HH
-# define   UUID_SPECIALIZATION_HH
+#ifndef    UUID_SPECIALIZATION_HXX
+# define   UUID_SPECIALIZATION_HXX
 
 # include "Uuid.hh"
 # include <functional>
@@ -17,4 +17,4 @@ namespace std {
 
 }
 
-#endif    /* UUID_SPECIALIZATION_HH */
+#endif    /* UUID_SPECIALIZATION_HXX */
