@@ -37,12 +37,14 @@ namespace utils {
   CoreObject::log(const std::string& message,
                   const Level& level) const noexcept
   {
-    LoggerLocator::getLogger().logMessage(
-      level,
-      message,
-      getName(),
-      m_service
-    );
+    if (m_allowLog) {
+      LoggerLocator::getLogger().logMessage(
+        level,
+        message,
+        getName(),
+        m_service
+      );
+    }
   }
 
   inline

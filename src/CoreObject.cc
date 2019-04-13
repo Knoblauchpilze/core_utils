@@ -3,9 +3,11 @@
 
 namespace utils {
 
-  CoreObject::CoreObject(const std::string& name):
+  CoreObject::CoreObject(const std::string& name,
+                         const bool allowLog):
     m_name(name),
-    m_service()
+    m_service(),
+    m_allowLog(allowLog)
   {}
 
   CoreObject::~CoreObject() {}

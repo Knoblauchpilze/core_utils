@@ -11,7 +11,8 @@ namespace utils {
   class CoreObject {
     public:
 
-      CoreObject(const std::string& name);
+      CoreObject(const std::string& name,
+                 const bool allowLog = true);
 
       virtual ~CoreObject();
 
@@ -27,15 +28,15 @@ namespace utils {
       withSafetyNet(std::function<void(void)> func,
                     const std::string& function) const;
 
-      void
+      virtual void
       log(const std::string& message,
           const Level& level = Level::Debug) const noexcept;
 
-      void
+      virtual void
       error(const std::string& message,
             const std::string& cause = std::string()) const;
 
-      void
+      virtual void
       error(const std::string& message,
             const CoreException& cause) const;
 
@@ -43,6 +44,7 @@ namespace utils {
 
       std::string m_name;
       std::string m_service;
+      bool m_allowLog;
   };
 
 }
