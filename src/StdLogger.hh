@@ -39,7 +39,7 @@ namespace utils {
                   const std::string& module,
                   const std::string& service,
                   const std::string& cause) const noexcept;
-      
+
       void
       logError(const std::string& message,
                const std::string& module,

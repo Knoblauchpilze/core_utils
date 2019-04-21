@@ -23,7 +23,7 @@ namespace utils {
       provide(Logger* logger);
 
     private:
-  
+
       static Logger* m_logger;
       static NullLogger sk_nullLogger;
   };
