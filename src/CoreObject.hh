@@ -19,6 +19,9 @@ namespace utils {
       const std::string&
       getName() const noexcept;
 
+      void
+      allowLog(const bool logging);
+
     protected:
 
       void

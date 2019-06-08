@@ -15,6 +15,12 @@ namespace utils {
 
   inline
   void
+  CoreObject::allowLog(const bool logging) {
+    m_allowLog = logging;
+  }
+
+  inline
+  void
   CoreObject::setService(const std::string& service) noexcept {
     m_service = service;
   }
