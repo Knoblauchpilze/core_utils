@@ -18,8 +18,6 @@ namespace utils {
   inline
   int
   Signal<Args...>::connect_member(T *inst, void (T::*func)(Args...)) {
-    std::lock_guard<std::mutex> guard(m_locker);
-
     // Connect the method through a lambda.
     return connect(
       [=](Args... args) {
@@ -33,8 +31,6 @@ namespace utils {
   inline
   int
   Signal<Args...>::connect_member(T *inst, void (T::*func)(Args...) const) {
-    std::lock_guard<std::mutex> guard(m_locker);
-
     // Connect the method through a lambda.
     return connect(
       [=](Args... args) {
