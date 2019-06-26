@@ -34,7 +34,7 @@ namespace utils {
     // Connect the method through a lambda.
     return connect(
       [=](Args... args) {
-        (inst->*func)(args...); 
+        (inst->*func)(args...);
       }
     );
   }
