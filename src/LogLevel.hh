@@ -9,8 +9,8 @@ namespace utils {
   enum class Level {
     Debug,
     Info,
-    Notice,
     Warning,
+    Notice,
     Error,
     Critical,
     Fatal
