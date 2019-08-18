@@ -1,4 +1,3 @@
-project (core_utils)
 
 set (CMAKE_CXX_STANDARD 14)
 
