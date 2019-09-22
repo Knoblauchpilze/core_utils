@@ -195,10 +195,19 @@ namespace utils {
 
     private:
 
+      /**
+       * @brief - Convenience structure to describe a bit with its name and default value.
+       */
       struct BitDesc {
         std::string name;
         bool defVal;
       };
+
+      /**
+       * @brief - Specialization needed to provide the `operator==` on `BitDesc` elements,
+       *          needed by the `BitsNames::operator==` operator.
+       */
+      friend bool operator==(const BitDesc& lhs, const BitDesc& rhs) noexcept;
 
       using BitsNames = std::unordered_map<int, BitDesc>;
 
@@ -270,5 +279,6 @@ std::ostream&
 operator<<(const utils::CoreFlag<N>& f, std::ostream& out) noexcept;
 
 # include "CoreFlag.hxx"
+# include "CoreFlag_specialization.hxx"
 
 #endif    /* CORE_FLAG_HH */
