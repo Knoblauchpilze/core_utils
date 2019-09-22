@@ -278,6 +278,5 @@ std::ostream&
 operator<<(const utils::CoreFlag<N>& f, std::ostream& out) noexcept;
 
 # include "CoreFlag.hxx"
-# include "CoreFlag_specialization.hxx"
 
 #endif    /* CORE_FLAG_HH */

@@ -27,7 +27,45 @@ namespace utils {
   inline
   bool
   CoreFlag<N>::operator==(const CoreFlag<N>& rhs) const noexcept {
-    return getName() == rhs.getName() && m_bits == rhs.m_bits && m_descs == rhs.m_descs;
+    if (getName() != rhs.getName()) {
+      return false;
+    }
+    
+    if (m_bits != rhs.m_bits) {
+      return false;
+    }
+
+    // Compare names of the fields.
+    // Note: we have to resort to this method instead of using the `operator==`
+    // of the `std::unordered_map` container because for some reasones `g++` fails
+    // to instantiate the template version of the `BitDesc::operator==` when it is
+    // defined separately. So we're basically rewriting our own here.
+    typename BitsNames::const_iterator lhsBits = m_descs.cbegin();
+    typename BitsNames::const_iterator rhsBits = rhs.m_descs.cbegin();
+    while (lhsBits != m_descs.cend() && rhsBits != rhs.m_descs.cend()) {
+      // Compare both names and default values. The position of each bit is implicitly
+      // checked by checking that the position of said names are at the same position
+      // in the map.
+      if (lhsBits->second.name != rhsBits->second.name ||
+          lhsBits->second.defVal != rhsBits->second.defVal)
+      {
+        return false;
+      }
+
+      ++lhsBits;
+      ++rhsBits;
+    }
+
+    // Should not happen.
+    if (lhsBits == m_descs.cend() && rhsBits != rhs.m_descs.cend()) {
+      return false;
+    }
+    if (lhsBits != m_descs.cend() && rhsBits == rhs.m_descs.cend()) {
+      return false;
+    }
+
+    // No difference in the names, both flags are indeed equals.
+    return true;
   }
 
   template <int N>
