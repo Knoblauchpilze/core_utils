@@ -42,6 +42,7 @@ namespace utils {
     // defined separately. So we're basically rewriting our own here.
     typename BitsNames::const_iterator lhsBits = m_descs.cbegin();
     typename BitsNames::const_iterator rhsBits = rhs.m_descs.cbegin();
+
     while (lhsBits != m_descs.cend() && rhsBits != rhs.m_descs.cend()) {
       // Compare both names and default values. The position of each bit is implicitly
       // checked by checking that the position of said names are at the same position
@@ -159,7 +160,7 @@ namespace utils {
     out += ": ";
 
     std::string value;
-    for (typename BitsNames::const_iterator bit = m_descs.cebgin() ; bit != m_descs.cend() ; ++bit) {
+    for (typename BitsNames::const_iterator bit = m_descs.cbegin() ; bit != m_descs.cend() ; ++bit) {
       if (isSet(bit->first)) {
         if (!value.empty()) {
           value += "|";
@@ -223,7 +224,7 @@ namespace utils {
       );
     }
 
-    m_bits[id] = false;
+    m_bits[id] = true;
   }
 
   template <int N>
@@ -239,7 +240,7 @@ namespace utils {
       );
     }
 
-    m_bits[id] = true;
+    m_bits[id] = false;
   }
 
   template <int N>
