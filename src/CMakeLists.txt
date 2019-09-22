@@ -8,6 +8,7 @@ set (SOURCES
   StdLogger.cc
   LoggerLocator.cc
   CoreObject.cc
+  CoreFlag.cc
   )
 
 add_library (core_utils SHARED
