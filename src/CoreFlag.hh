@@ -262,7 +262,6 @@ operator^=(const utils::CoreFlag<N>& lhs, const utils::CoreFlag<N>& rhs) noexcep
  * @param out - the stream into which the flag should be dumped.
  * @return - a reference to the modified stream.
  */
-// TODO: Update implementation of all other `operator<<`.
 template <int N>
 std::ostream&
 operator<<(std::ostream& out, const utils::CoreFlag<N>& f) noexcept;

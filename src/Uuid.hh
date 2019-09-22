@@ -55,10 +55,10 @@ namespace utils {
 }
 
 std::ostream&
-operator<<(const utils::Uuid& uuid, std::ostream& out) noexcept;
+operator<<(std::ostream& out, const utils::Uuid& uuid) noexcept;
 
 std::ostream&
-operator<<(std::ostream& out, const utils::Uuid& uuid) noexcept;
+operator<<(const utils::Uuid& uuid, std::ostream& out) noexcept;
 
 # include "Uuid.hxx"
 # include "Uuid_specialization.hxx"

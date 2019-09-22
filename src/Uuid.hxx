@@ -147,15 +147,15 @@ namespace utils {
 
 inline
 std::ostream&
-operator<<(const utils::Uuid& uuid, std::ostream& out) noexcept {
-  return operator<<(out, uuid);
+operator<<(std::ostream& out, const utils::Uuid& uuid) noexcept {
+  out << uuid.toString();
+  return out;
 }
 
 inline
 std::ostream&
-operator<<(std::ostream& out, const utils::Uuid& uuid) noexcept {
-  out << uuid.toString();
-  return out;
+operator<<(const utils::Uuid& uuid, std::ostream& out) noexcept {
+  return operator<<(out, uuid);
 }
 
 
