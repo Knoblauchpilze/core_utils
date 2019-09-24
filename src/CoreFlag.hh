@@ -5,13 +5,46 @@
 # include <memory>
 # include <string>
 # include <iostream>
+# include <type_traits>
 # include <unordered_map>
 
 namespace utils {
 
-  template <int N>
+  /**
+   * @brief - Used to retrieve a human readable name for the input key.
+   *          The user should specialize this function for its own
+   *          type in order to fully benefit from the `CoreFlag` type.
+   * @param key - an enumeration value for which the name should be
+   *              retrieved.
+   * @return - a human readable string allowing to describe the input
+   *           key value.
+   */
+  template <typename Enum>
+  std::string
+  getNameForKey(const Enum& key);
+
+  template <typename Enum>
   class CoreFlag {
+
+    static_assert(std::is_enum<Enum>::value, "Must be an enum type");
+
     public:
+
+      /**
+       * @brief - Creates a flag with the no individual bit set to active. All
+       *          possible values of the flag will be registered and the flag
+       *          can readily be used to include any value defined by the `Enum`
+       *          type.
+       */
+      CoreFlag();
+
+      /**
+       * @brief - Creates a flag with the specified value activated. All possible
+       *          values of the flag will be registered and the flag can readily
+       *          be used to include any value defined by the `Enum` type.
+       * @param value - the value to assign to this flag.
+       */
+      CoreFlag(const Enum& value);
 
       /**
        * @brief - Create a new flag from the input value. The values of the individual
@@ -109,6 +142,44 @@ namespace utils {
       reserved() const noexcept;
 
       /**
+       * @brief - Used to set the value of the individual flag value associated to
+       *          the enumeration value `key`  to active.
+       *          Nothing happens if this value is already activated.
+       *          An error is raised if the corresponding bit hasn't been registered
+       *          through the `addBit` method beforehand.
+       * @param key - the enumeration value for which the associated bit should be
+       *              set.
+       * @return - `true` if the value was effectively changed, `false` otherwise.
+       */
+      bool
+      set(const Enum& key);
+
+      /**
+       * @brief - Used to set the value of the individual flag value associated to
+       *          the enumeration value `key` to inactive.
+       *          Nothing happens if this value is already deactivated.
+       *          An error is raised if the corresponding bit hasn't been registered
+       *          through the `addBit` method beforehand.
+       * @param id - the enumeration value for whichthe associated bit should be
+       *             unset.
+       * @return - `true` if the value was effectively changed, `false` otherwise.
+       */
+      bool
+      unset(const Enum& key);
+
+      /**
+       * @brief - Allows to check whether the bit associated to the individual value
+       *          `key` is currently set or unset. Note that this method raises an
+       *          error if the corresponding bit has not been registered through the
+       *          `addBit` method yet.
+       * @param key - the enumeration key for which the bit should be checked.
+       * @return - `true` if the corresponding bit is registered and activated and
+       *           `false` if is is registered but deactivated.
+       */
+      bool
+      isSet(const Enum& key) const;
+
+      /**
        * @brief - Resets all the bits of this flag to their default values.
        */
       void
@@ -127,89 +198,59 @@ namespace utils {
     protected:
 
       /**
-       * @brief - Creates a flag with the specified number of possible values. The
-       *          actual `length` of the flag is specified by the template parameter
-       *          and corresponds to the number of individual values which are 
-       *          to build any value of the flag.
-       *          This does not mean that the flag is limited to `length` values
-       *          but rather than each possible value of the flag is made by doing
-       *          composition of these individual values.
-       *          Theoretically the number of possible values is thus `2^length`.
-       * @param name - the name of this flag as a human readable string.
+       * @brief - Used to initialize the flag bits in order to be able to easily use all the
+       *          values provided by the input enum. We traverse the enumeration by assuming
+       *          that the available value range from `0` all the way up to `ValuesCount`.
        */
-      CoreFlag(const std::string& name);
+      void
+      init();
 
       /**
-       * @brief - Used to register a new bit with the specified `name` in this flag.
-       *          The return value indicates the position of the named option in the
-       *          internal bits array. An internal counter is used to determine which
-       *          bits have already been registered to some values and if all the bits
-       *          have already been used an error is raised.
-       *          The user can specify the default value for this bit: this is used in
-       *          the `clear` method to reset the flag to its initial value.
-       * @param name - the name of the bit to add.
-       * @param value - the default value to assign to this bit (will be assigned to the
-       *                bit upon creating it)
-       * @param defaultValue - the default value to assign to the bit when calling `clear`
-       *                       method.
-       * @return - an index representing the position of the bit in the internal bits
-       *           array. This value is in the range `[0; size()]`.
+       * @brief - Used to retrieve the index in the internal bitset for the input
+       *          enumeration key. If no such index is defined `-1` is returned.
+       * @param key - the enumeration value for which the index of the associated
+       *              bit should be returned.
+       * @return - the index of the bit corresponding to the input `key` or `-1`
+       *           if no such bit exists.
        */
       int
-      addNamedBit(const std::string& name,
-                  bool value,
-                  bool defaultValue = false);
+      getIdFor(const Enum& key) const noexcept;
 
       /**
-       * @brief - Used to set the value of the individual flag value at `id` to active.
-       *          Nothing happens if this value is already activated.
-       *          An error is raised if the corresponding bit hasn't registered through
-       *          the `addNamedBit` method beforehand.
-       * @param id - the index of the individual flag to set.
-       * @return - `true` if the value was effectively changed, `false` otherwise.
+       * @brief - Used to register a new bit with the specified enumeration value
+       *          `key` in this flag. The return value indicates the position of
+       *          the key in the internal bits array. An internal counter is used
+       *          to determine how many bits have already been registered to some
+       *          values and if all the bits have already been used an error is
+       *          raised.
+       *          The user can specify the default value for this bit: this is used
+       *          in the `clear` method to reset the flag to its initial value.
+       * @param key - the enumeration value to register.
+       * @param value - the default value to assign to this bit (will be assigned
+       *                to the bit upon creating it).
+       * @param defaultValue - the default value to assign to the bit when calling
+       *                       `clear` method.
+       * @return - an index representing the position of the bit in the internal
+       *           bits array. This value is in the range `[0; size()]`.
        */
-      bool
-      set(int id);
-
-      /**
-       * @brief - Used to set the value of the individual flag value at `id` to inactive.
-       *          Nothing happens if this value is already deactivated.
-       *          An error is raised if the corresponding bit hasn't registered through
-       *          the `addNamedBit` method beforehand.
-       * @param id - the index of the individual flag to unset.
-       * @return - `true` if the value was effectively changed, `false` otherwise.
-       */
-      bool
-      unset(int id);
-
-      /**
-       * @brief - Allows to check whether the bit at `id` is currently set or unset. Note
-       *          that this method raises an error if the corresponding bit has not been
-       *          registered through the `addNamedBit` method yet.
-       * @param id - the index of the individual flag to query.
-       * @return - `true` if the corresponding bit is registered and activated and `false`
-       *           if is is registered but deactivated.
-       */
-      bool
-      isSet(int id) const;
+      int
+      addBit(const Enum& key,
+             bool value,
+             bool defaultValue = false);
 
     private:
+
+      using FlagType = std::underlying_type_t<Enum>;
 
       /**
        * @brief - Convenience structure to describe a bit with its name and default value.
        */
       struct BitDesc {
-        std::string name;
+        int id;
         bool defVal;
       };
 
-      /**
-       * @brief - Specialization needed to provide the `operator==` on `BitDesc` elements,
-       *          needed by the `BitsNames::operator==` operator.
-       */
-      friend bool operator==(const BitDesc& lhs, const BitDesc& rhs) noexcept;
-
-      using BitsNames = std::unordered_map<int, BitDesc>;
+      using BitsIDs = std::unordered_map<Enum, BitDesc>;
 
       /**
        * @brief - Convenience names to format core exception messages.
@@ -217,12 +258,12 @@ namespace utils {
       static const char* sk_serviceName;
 
       std::string m_name;
-      std::bitset<N> m_bits;
-      BitsNames m_descs;
+      std::bitset<static_cast<FlagType>(Enum::ValuesCount)> m_bits;
+      BitsIDs m_descs;
   };
 
-  template <int N>
-  using CoreFlagShPtr = std::shared_ptr<CoreFlag<N>>;
+  template <typename Enum>
+  using CoreFlagShPtr = std::shared_ptr<CoreFlag<Enum>>;
 }
 
 /**
@@ -231,9 +272,9 @@ namespace utils {
  * @param rhs - the second element to OR.
  * @return - a new flag with resulting of the OR operation.
  */
-template <int N>
-utils::CoreFlag<N>
-operator|(const utils::CoreFlag<N>& lhs, const utils::CoreFlag<N>& rhs) noexcept;
+template <typename Enum>
+utils::CoreFlag<Enum>
+operator|(const utils::CoreFlag<Enum>& lhs, const utils::CoreFlag<Enum>& rhs) noexcept;
 
 /**
  * @brief - Performs the bitwise AND operation between `lhs` and the `rhs` value.
@@ -241,9 +282,9 @@ operator|(const utils::CoreFlag<N>& lhs, const utils::CoreFlag<N>& rhs) noexcept
  * @param rhs - the second element to AND.
  * @return - a new flag with resulting of the AND operation.
  */
-template <int N>
-utils::CoreFlag<N>
-operator&(const utils::CoreFlag<N>& lhs, const utils::CoreFlag<N>& rhs) noexcept;
+template <typename Enum>
+utils::CoreFlag<Enum>
+operator&(const utils::CoreFlag<Enum>& lhs, const utils::CoreFlag<Enum>& rhs) noexcept;
 
 /**
  * @brief - Performs the bitwise XOR operation between `lhs` and the `rhs` value.
@@ -251,9 +292,9 @@ operator&(const utils::CoreFlag<N>& lhs, const utils::CoreFlag<N>& rhs) noexcept
  * @param rhs - the second element to XOR.
  * @return - a new flag with resulting of the XOR operation.
  */
-template <int N>
-utils::CoreFlag<N>
-operator^=(const utils::CoreFlag<N>& lhs, const utils::CoreFlag<N>& rhs) noexcept;
+template <typename Enum>
+utils::CoreFlag<Enum>
+operator^=(const utils::CoreFlag<Enum>& lhs, const utils::CoreFlag<Enum>& rhs) noexcept;
 
 /**
  * @brief - Outputs the specified flag into the provided stream. Each named bit is
@@ -262,9 +303,9 @@ operator^=(const utils::CoreFlag<N>& lhs, const utils::CoreFlag<N>& rhs) noexcep
  * @param out - the stream into which the flag should be dumped.
  * @return - a reference to the modified stream.
  */
-template <int N>
+template <typename Enum>
 std::ostream&
-operator<<(std::ostream& out, const utils::CoreFlag<N>& f) noexcept;
+operator<<(std::ostream& out, const utils::CoreFlag<Enum>& f) noexcept;
 
 /**
  * @brief - Outputs the specified flag into the provided stream. Each named bit is
@@ -273,9 +314,9 @@ operator<<(std::ostream& out, const utils::CoreFlag<N>& f) noexcept;
  * @param out - the stream into which the flag should be dumped.
  * @return - a reference to the modified stream.
  */
-template <int N>
+template <typename Enum>
 std::ostream&
-operator<<(const utils::CoreFlag<N>& f, std::ostream& out) noexcept;
+operator<<(const utils::CoreFlag<Enum>& f, std::ostream& out) noexcept;
 
 # include "CoreFlag.hxx"
 

@@ -6,80 +6,89 @@
 
 namespace utils {
 
-  template <int N> const char* CoreFlag<N>::sk_serviceName = "CoreFlag";
-
-  template <int N>
+  template <typename Enum>
   inline
-  CoreFlag<N>::CoreFlag(const CoreFlag<N>& rhs) noexcept:
+  std::string
+  getNameForKey(const Enum& key) {
+    static_assert(std::is_enum<Enum>::value, "Must be an enum type");
+
+    // Not defined at the general level, should be specialized for each
+    // enumeration to be used with the `CoreFlag` class.
+    throw CoreException(
+      std::string("Could not get name for key ") + std::to_string(static_cast<typename std::underlying_type<Enum>::value>(key)),
+      std::string("CoreFlag"),
+      std::string("getNameForKey"),
+      std::string("No valid template specialization")
+    );
+  }
+
+  template <typename Enum> const char* CoreFlag<Enum>::sk_serviceName = "CoreFlag";
+
+  template <typename Enum>
+  inline
+  CoreFlag<Enum>::CoreFlag():
+    m_name(typeid(Enum).name()),
+    m_bits(),
+    m_descs()
+  {
+    init();
+  }
+
+  template <typename Enum>
+  inline
+  CoreFlag<Enum>::CoreFlag(const Enum& value):
+    m_name(typeid(Enum).name()),
+    m_bits(),
+    m_descs()
+  {
+    init();
+
+    set(value);
+  }
+
+  template <typename Enum>
+  inline
+  CoreFlag<Enum>::CoreFlag(const CoreFlag<Enum>& rhs) noexcept:
     m_name(rhs.m_name),
     m_bits(rhs.m_bits),
     m_descs(rhs.m_descs)
   {}
 
-  template <int N>
+  template <typename Enum>
   inline
   const std::string&
-  CoreFlag<N>::getName() const noexcept {
+  CoreFlag<Enum>::getName() const noexcept {
     return m_name;
   }
 
-  template <int N>
+  template <typename Enum>
   inline
   bool
-  CoreFlag<N>::operator==(const CoreFlag<N>& rhs) const noexcept {
+  CoreFlag<Enum>::operator==(const CoreFlag<Enum>& rhs) const noexcept {
     if (getName() != rhs.getName()) {
       return false;
     }
-    
-    if (m_bits != rhs.m_bits) {
-      return false;
-    }
 
-    // Compare names of the fields.
-    // Note: we have to resort to this method instead of using the `operator==`
-    // of the `std::unordered_map` container because for some reasones `g++` fails
-    // to instantiate the template version of the `BitDesc::operator==` when it is
-    // defined separately. So we're basically rewriting our own here.
-    typename BitsNames::const_iterator lhsBits = m_descs.cbegin();
-    typename BitsNames::const_iterator rhsBits = rhs.m_descs.cbegin();
-
-    while (lhsBits != m_descs.cend() && rhsBits != rhs.m_descs.cend()) {
-      // Compare both names and default values. The position of each bit is implicitly
-      // checked by checking that the position of said names are at the same position
-      // in the map.
-      if (lhsBits->second.name != rhsBits->second.name ||
-          lhsBits->second.defVal != rhsBits->second.defVal)
-      {
-        return false;
-      }
-
-      ++lhsBits;
-      ++rhsBits;
-    }
-
-    // Should not happen.
-    if (lhsBits == m_descs.cend() && rhsBits != rhs.m_descs.cend()) {
-      return false;
-    }
-    if (lhsBits != m_descs.cend() && rhsBits == rhs.m_descs.cend()) {
-      return false;
-    }
-
-    // No difference in the names, both flags are indeed equals.
-    return true;
+    // Given that the bits are registered upon building this object and
+    // provided that we only consider equality between elements which
+    // define the same template enumeration it seems overkill to check
+    // individual fields. Indeed we will have registered elements in the
+    // same order while constructing the object so we will consider us
+    // happy with only checking that the internal bits are identical.
+    return m_bits == rhs.m_bits;
   }
 
-  template <int N>
+  template <typename Enum>
   inline
   bool
-  CoreFlag<N>::operator!=(const CoreFlag<N>& rhs) const noexcept {
+  CoreFlag<Enum>::operator!=(const CoreFlag<Enum>& rhs) const noexcept {
     return !operator==(rhs);
   }
 
-  template <int N>
+  template <typename Enum>
   inline
-  CoreFlag<N>&
-  CoreFlag<N>::operator|=(const CoreFlag<N>& rhs) noexcept {
+  CoreFlag<Enum>&
+  CoreFlag<Enum>::operator|=(const CoreFlag<Enum>& rhs) noexcept {
     if (rhs != *this) {
       m_bits |= rhs.m_bits;
     }
@@ -87,10 +96,10 @@ namespace utils {
     return *this;
   }
 
-  template <int N>
+  template <typename Enum>
   inline
-  CoreFlag<N>&
-  CoreFlag<N>::operator&=(const CoreFlag<N>& rhs) noexcept {
+  CoreFlag<Enum>&
+  CoreFlag<Enum>::operator&=(const CoreFlag<Enum>& rhs) noexcept {
     if (rhs != *this) {
       m_bits &= rhs.m_bits;
     }
@@ -98,10 +107,10 @@ namespace utils {
     return *this;
   }
 
-  template <int N>
+  template <typename Enum>
   inline
-  CoreFlag<N>&
-  CoreFlag<N>::operator^=(const CoreFlag<N>& rhs) noexcept {
+  CoreFlag<Enum>&
+  CoreFlag<Enum>::operator^=(const CoreFlag<Enum>& rhs) noexcept {
     if (rhs != *this) {
       m_bits ^= rhs.m_bits;
     }
@@ -109,50 +118,110 @@ namespace utils {
     return *this;
   }
 
-  template <int N>
+  template <typename Enum>
   inline
-  CoreFlag<N>
-  CoreFlag<N>::operator~() const noexcept {
-    CoreFlag<N> other(*this);
+  CoreFlag<Enum>
+  CoreFlag<Enum>::operator~() const noexcept {
+    CoreFlag<Enum> other(*this);
 
     other.m_bits.flip();
 
     return other;
   }
 
-  template <int N>
+  template <typename Enum>
   inline
   int
-  CoreFlag<N>::size() const noexcept {
+  CoreFlag<Enum>::size() const noexcept {
     return m_bits.size();
   }
 
-  template <int N>
+  template <typename Enum>
   inline
   int
-  CoreFlag<N>::reserved() const noexcept {
+  CoreFlag<Enum>::reserved() const noexcept {
     return m_descs.size();
   }
 
-  template <int N>
+  template <typename Enum>
+  inline
+  bool
+  CoreFlag<Enum>::set(const Enum& key) {
+    // Attempt to retrieve the index for this key.
+    int id = getIdFor(key);
+
+    // Check for errors.
+    if (id < 0) {
+      throw CoreException(
+        std::string("Could not set bit ") + getNameForKey(key) + " in flag",
+        getName(),
+        sk_serviceName,
+        std::string("Associated bit not found")
+      );
+    }
+
+    m_bits[id] = true;
+  }
+
+  template <typename Enum>
+  inline
+  bool
+  CoreFlag<Enum>::unset(const Enum& key) {
+    // Attempt to retrieve the index for this key.
+    int id = getIdFor(key);
+
+    // Check for errors.
+    if (id < 0) {
+      throw CoreException(
+        std::string("Could not unset bit ") + getNameForKey(key) + " in flag",
+        getName(),
+        sk_serviceName,
+        std::string("Associated bit not found")
+      );
+    }
+
+    m_bits[id] = false;
+  }
+
+  template <typename Enum>
+  inline
+  bool
+  CoreFlag<Enum>::isSet(const Enum& key) const {
+    // Attempt to retrieve the index for this key.
+    int id = getIdFor(key);
+
+    // Check for errors.
+    if (id < 0) {
+      throw CoreException(
+        std::string("Could not check whether bit ") + getNameForKey(key) + " is set in flag",
+        getName(),
+        sk_serviceName,
+        std::string("Associated bit not found")
+      );
+    }
+
+    return m_bits.test(id);
+  }
+
+  template <typename Enum>
   inline
   void
-  CoreFlag<N>::clear() noexcept {
+  CoreFlag<Enum>::clear() noexcept {
     // Clear the existing data.
     m_bits.reset();
 
     // Reset all individual bits to their default values.
-    for (typename BitsNames::const_iterator bit = m_descs.cbegin() ; bit != m_descs.cend() ; ++bit) {
+    for (typename BitsIDs::const_iterator bit = m_descs.cbegin() ; bit != m_descs.cend() ; ++bit) {
       if (bit->second.defVal) {
         set(bit->first);
       }
     }
   }
 
-  template <int N>
+  template <typename Enum>
   inline
   std::string
-  CoreFlag<N>::toString() const noexcept {
+  CoreFlag<Enum>::toString() const noexcept {
     std::string out;
 
     out += "[";
@@ -160,12 +229,14 @@ namespace utils {
     out += ": ";
 
     std::string value;
-    for (typename BitsNames::const_iterator bit = m_descs.cbegin() ; bit != m_descs.cend() ; ++bit) {
+    for (typename BitsIDs::const_iterator bit = m_descs.cbegin() ; bit != m_descs.cend() ; ++bit) {
       if (isSet(bit->first)) {
         if (!value.empty()) {
           value += "|";
         }
-        value += bit->second.name;
+        // Note: we rely on the existence of a method in the `utils` namespace which
+        // allows to convert the name of the enumeration into a valid string.
+        value += getNameForKey(bit->first);
       }
     }
     if (value.empty()) {
@@ -179,24 +250,41 @@ namespace utils {
     return out;
   }
 
-  template <int N>
+  template <typename Enum>
   inline
-  CoreFlag<N>::CoreFlag(const std::string& name):
-    m_name(name),
-    m_bits(),
-    m_descs()
-  {}
+  void
+  CoreFlag<Enum>::init() {
+    FlagType count = FlagType(0);
+    FlagType max = static_cast<FlagType>(Enum::ValuesCount);
+    while (count < max) {
+      addBit(static_cast<Enum>(count), false, false);
+      ++count;
+    }
+  }
 
-  template <int N>
+  template <typename Enum>
   inline
   int
-  CoreFlag<N>::addNamedBit(const std::string& name,
-                           bool value,
-                           bool defaultValue)
+  CoreFlag<Enum>::getIdFor(const Enum& key) const noexcept {
+    typename BitsIDs::const_iterator bit = m_descs.find(key);
+
+    if (bit == m_descs.cend()) {
+      return -1;
+    }
+
+    return bit->second.id;
+  }
+
+  template <typename Enum>
+  inline
+  int
+  CoreFlag<Enum>::addBit(const Enum& key,
+                         bool value,
+                         bool defaultValue)
   {
     if (reserved() == size()) {
       throw CoreException(
-        std::string("Could not add named bit \"") + name + "\" to flag",
+        std::string("Could not add bit \"") + getNameForKey(key) + "\" to flag",
         getName(),
         sk_serviceName,
         std::string("Flag already has all its ") + std::to_string(size()) + " bit(s) assigned"
@@ -204,105 +292,57 @@ namespace utils {
     }
 
     int id = reserved();
-    m_descs[id] = BitDesc{name, defaultValue};
+    m_descs[key] = BitDesc{id, defaultValue};
 
     m_bits[id] = value;
 
     return id;
   }
 
-  template <int N>
-  inline
-  bool
-  CoreFlag<N>::set(int id) {
-    if (id >= reserved()) {
-      throw CoreException(
-        std::string("Could not set bit ") + std::to_string(id) + " in flag",
-        getName(),
-        sk_serviceName,
-        std::string("Only ") + std::to_string(reserved()) + " bit(s) are reserved"
-      );
-    }
-
-    m_bits[id] = true;
-  }
-
-  template <int N>
-  inline
-  bool
-  CoreFlag<N>::unset(int id) {
-    if (id >= reserved()) {
-      throw CoreException(
-        std::string("Could not unset bit ") + std::to_string(id) + " in flag",
-        getName(),
-        sk_serviceName,
-        std::string("Only ") + std::to_string(reserved()) + " bit(s) are reserved"
-      );
-    }
-
-    m_bits[id] = false;
-  }
-
-  template <int N>
-  inline
-  bool
-  CoreFlag<N>::isSet(int id) const {
-    if (id >= reserved()) {
-      throw CoreException(
-        std::string("Could not check whether bit ") + std::to_string(id) + "\" is set in flag",
-        getName(),
-        sk_serviceName,
-        std::string("Only ") + std::to_string(reserved()) + " bit(s) are reserved"
-      );
-    }
-
-    return m_bits.test(id);
-  }
-
 }
 
-template <int N>
+template <typename Enum>
 inline
-utils::CoreFlag<N>
-operator|(const utils::CoreFlag<N>& lhs, const utils::CoreFlag<N>& rhs) noexcept {
-  utils::CoreFlag<N> out(lhs);
+utils::CoreFlag<Enum>
+operator|(const utils::CoreFlag<Enum>& lhs, const utils::CoreFlag<Enum>& rhs) noexcept {
+  utils::CoreFlag<Enum> out(lhs);
   out |= rhs;
 
   return out;
 }
 
-template <int N>
+template <typename Enum>
 inline
-utils::CoreFlag<N>
-operator&(const utils::CoreFlag<N>& lhs, const utils::CoreFlag<N>& rhs) noexcept {
-  utils::CoreFlag<N> out(lhs);
+utils::CoreFlag<Enum>
+operator&(const utils::CoreFlag<Enum>& lhs, const utils::CoreFlag<Enum>& rhs) noexcept {
+  utils::CoreFlag<Enum> out(lhs);
   out &= rhs;
 
   return out;
 }
 
-template <int N>
+template <typename Enum>
 inline
-utils::CoreFlag<N>
-operator^=(const utils::CoreFlag<N>& lhs, const utils::CoreFlag<N>& rhs) noexcept {
-  utils::CoreFlag<N> out(lhs);
+utils::CoreFlag<Enum>
+operator^=(const utils::CoreFlag<Enum>& lhs, const utils::CoreFlag<Enum>& rhs) noexcept {
+  utils::CoreFlag<Enum> out(lhs);
   out ^= rhs;
 
   return out;
 }
 
-template <int N>
+template <typename Enum>
 inline
 std::ostream&
-operator<<(std::ostream& out, const utils::CoreFlag<N>& f) noexcept {
+operator<<(std::ostream& out, const utils::CoreFlag<Enum>& f) noexcept {
   out << f.toString();
   return out;
 }
 
-template <int N>
+template <typename Enum>
 inline
 std::ostream&
-operator<<(const utils::CoreFlag<N>& f, std::ostream& out) noexcept {
+operator<<(const utils::CoreFlag<Enum>& f, std::ostream& out) noexcept {
   return operator<<(out, f);
 }
 
