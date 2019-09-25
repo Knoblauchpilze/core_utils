@@ -81,8 +81,22 @@ namespace utils {
   template <typename Enum>
   inline
   bool
+  CoreFlag<Enum>::operator==(const Enum& key) const noexcept {
+    return isSet(key);
+  }
+
+  template <typename Enum>
+  inline
+  bool
   CoreFlag<Enum>::operator!=(const CoreFlag<Enum>& rhs) const noexcept {
     return !operator==(rhs);
+  }
+
+  template <typename Enum>
+  inline
+  bool
+  CoreFlag<Enum>::operator!=(const Enum& key) const noexcept {
+    return !operator==(key);
   }
 
   template <typename Enum>
@@ -92,6 +106,15 @@ namespace utils {
     if (rhs != *this) {
       m_bits |= rhs.m_bits;
     }
+
+    return *this;
+  }
+
+  template <typename Enum>
+  inline
+  CoreFlag<Enum>&
+  CoreFlag<Enum>::operator|=(const Enum& key) noexcept {
+    set(key);
 
     return *this;
   }
@@ -110,9 +133,40 @@ namespace utils {
   template <typename Enum>
   inline
   CoreFlag<Enum>&
+  CoreFlag<Enum>::operator&=(const Enum& key)  noexcept {
+    // We want to keep only the bit corresponding to `key`
+    // active if it was the case and none if it wasn't.
+    const bool v = isSet(key);
+    clear();
+    if (v) {
+      set(key);
+    }
+
+    return *this;
+  }
+
+  template <typename Enum>
+  inline
+  CoreFlag<Enum>&
   CoreFlag<Enum>::operator^=(const CoreFlag<Enum>& rhs) noexcept {
     if (rhs != *this) {
       m_bits ^= rhs.m_bits;
+    }
+
+    return *this;
+  }
+
+  template <typename Enum>
+  inline
+  CoreFlag<Enum>&
+  CoreFlag<Enum>::operator^=(const Enum& key) noexcept {
+    // We want to keep only the bit which are exclusively
+    // inside `this` OR inside `key`. Everything except the
+    // `key` bit will thus be preserved, and also the `key`
+    // bit will be set if it was not already in which case
+    // it will be turned off.
+    if (isSet(key)) {
+      unset(key);
     }
 
     return *this;

@@ -36,6 +36,7 @@ namespace utils {
        *          can readily be used to include any value defined by the `Enum`
        *          type.
        */
+      explicit
       CoreFlag();
 
       /**
@@ -44,6 +45,7 @@ namespace utils {
        *          be used to include any value defined by the `Enum` type.
        * @param value - the value to assign to this flag.
        */
+      explicit
       CoreFlag(const Enum& value);
 
       /**
@@ -78,6 +80,19 @@ namespace utils {
       operator==(const CoreFlag& rhs) const noexcept;
 
       /**
+       * @brief - Specialization of the `operator==` which allows to check directly
+       *          a key of the base enumeration without having to create a flag.
+       *          Somewhat quicker than the previous version but fundamentally does
+       *          the same job.
+       * @param key - an enumeration value which should be checked for unique existence
+       *              in `this` flag.
+       * @return - `true` if `this` flag only contains the input `key` value, and `false`
+       *           otherwise.
+       */
+      bool
+      operator==(const Enum& key) const noexcept;
+
+      /**
        * @brief - Similar behavior to `operator==` but checks for difference between
        *          both `this` and `rhs`.
        * @param rhs - the other element to compare with `this`.
@@ -85,6 +100,16 @@ namespace utils {
        */
       bool
       operator!=(const CoreFlag& rhs) const noexcept;
+
+      /**
+       * @brief - Same as above but with a variant containing a single enumeration key
+       *          rather than a fully fleshed flag.
+       * @param key - the enumeration value which should be checked for unique existence
+       *              in `this` flag.
+       * @return - `true` if `this` does not only contain the input `key` value.
+       */
+      bool
+      operator!=(const Enum& key) const noexcept;
 
       /**
        * @brief - Performs the bitwise AND operation between `this` and the `rhs` value.
@@ -95,6 +120,16 @@ namespace utils {
       operator|=(const CoreFlag& rhs) noexcept;
 
       /**
+       * @brief - Same as above but performs the insertion of the input enumeration key
+       *          without needed to create another flag. Basically equivalent to calling
+       *          `set(key)` on `this` flag.
+       * @param key - the enumeration value which should be ORed with `this` flag.
+       * @return - a reference on `this` flag after inserting the `key` in it.
+       */
+      CoreFlag&
+      operator|=(const Enum& key) noexcept;
+
+      /**
        * @brief - Performs the bitwise AND operation between `this` and the `rhs` value.
        * @param rhs - the other element which should be ANDed with `this`.
        * @return - a reference to `this` object once modified.
@@ -103,12 +138,30 @@ namespace utils {
       operator&=(const CoreFlag& rhs) noexcept;
 
       /**
+       * @brief - Same as above but performs the logical AND between the input enumeration
+       *          key and the existing value of `this` without needed to create another flag.
+       * @param key - the enumeration value which should be ANDed with `this` flag.
+       * @return - a reference on `this` flag after ANDing with the `key`.
+       */
+      CoreFlag&
+      operator&=(const Enum& key) noexcept;
+
+      /**
        * @brief - Performs the bitwise XOR operation between `this` and the `rhs` value.
        * @param rhs - the other element which should be XORed with `this`.
        * @return - a reference to `this` object once modified.
        */
       CoreFlag&
       operator^=(const CoreFlag& rhs) noexcept;
+
+      /**
+       * @brief - Same as above but performs the logical XOR between the input enumeration
+       *          key and the existing value of `this` without crteating another flag.
+       * @param key - the enumeration value which should be XORed with `this` flag.
+       * @return - a reference on `this` flag after XORing with the `key`.
+       */
+      CoreFlag&
+      operator^=(const Enum& key) noexcept;
 
       /**
        * @brief - Performs the bitwise NOT operation on a temporary copy of `this`.
