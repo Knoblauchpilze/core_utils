@@ -37,6 +37,8 @@ namespace utils {
   template <typename Enum>
   inline
   CoreFlag<Enum>::CoreFlag(const Enum& value):
+    // TODO: This typeid business produces names like so: "[N3sdl4core5focus4TypeE: Click]"
+    // which is not exactly human readable. Maybe we should rely on the `abi` interface.
     m_name(typeid(Enum).name()),
     m_bits(),
     m_descs()
