@@ -2,6 +2,7 @@
 # define   CORE_FLAG_HXX
 
 # include "CoreFlag.hh"
+# include <cxxabi.h>
 # include "CoreException.hh"
 
 namespace utils {
@@ -37,8 +38,6 @@ namespace utils {
   template <typename Enum>
   inline
   CoreFlag<Enum>::CoreFlag(const Enum& value):
-    // TODO: This typeid business produces names like so: "[N3sdl4core5focus4TypeE: Click]"
-    // which is not exactly human readable. Maybe we should rely on the `abi` interface.
     m_name(typeid(Enum).name()),
     m_bits(),
     m_descs()
@@ -310,12 +309,27 @@ namespace utils {
   inline
   void
   CoreFlag<Enum>::init() {
+    // Register each value defined in the enumeration used to create this flag. Note
+    // that we rely on the fact that enumeration value are continuously increasing
+    // from `0` to `Enum::ValuesCount`. If this is not the case we might run into
+    // trouble.
     FlagType count = FlagType(0);
     FlagType max = static_cast<FlagType>(Enum::ValuesCount);
     while (count < max) {
       addBit(static_cast<Enum>(count), false, false);
       ++count;
     }
+
+    // Also extract the name.
+    m_name = extractName();
+  }
+
+  template <typename Enum>
+  inline
+  std::string
+  CoreFlag<Enum>::extractName() const noexcept {
+    int status;
+    return abi::__cxa_demangle(typeid(Enum).name(), 0, 0, &status);
   }
 
   template <typename Enum>

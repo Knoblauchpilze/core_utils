@@ -259,6 +259,15 @@ namespace utils {
       init();
 
       /**
+       * @brief - Used to extract the name of the flag: we demangle the enum type so that we
+       *          get a human readable string.
+       * @return - the unmangled string representing the name of the enum used to create this
+       *           flag.
+       */
+      std::string
+      extractName() const noexcept;
+
+      /**
        * @brief - Used to retrieve the index in the internal bitset for the input
        *          enumeration key. If no such index is defined `-1` is returned.
        * @param key - the enumeration value for which the index of the associated
