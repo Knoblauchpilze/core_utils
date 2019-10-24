@@ -23,8 +23,11 @@ namespace utils {
                         const std::string& cause) const noexcept
   {
     switch (level) {
+      case Level::Verbose:
+        logVerbose(message, module, service, cause);
+        break;
       case Level::Debug:
-        logDebug(message, module,service, cause);
+        logDebug(message, module, service, cause);
         break;
       case Level::Info:
         logInfo(message, module, service, cause);
@@ -117,6 +120,16 @@ namespace utils {
                       const std::string& cause) const noexcept
   {
     logTrace(StreamFormatter::Color::Blue, Level::Debug, message, module, service, cause);
+  }
+
+  inline
+  void
+  StdLogger::logVerbose(const std::string& message,
+                        const std::string& module,
+                        const std::string& service,
+                        const std::string& cause) const noexcept
+  {
+    logTrace(StreamFormatter::Color::Gray, Level::Verbose, message, module, service, cause);
   }
 
   inline

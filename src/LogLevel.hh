@@ -7,6 +7,7 @@ namespace utils {
 
   // Various levels of logs.
   enum class Level {
+    Verbose,
     Debug,
     Info,
     Warning,

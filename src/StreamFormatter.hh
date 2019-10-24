@@ -16,7 +16,8 @@ namespace utils {
         Blue,
         Magenta,
         Cyan,
-        White
+        White,
+        Gray
       };
 
       StreamFormatter() = default;

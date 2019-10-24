@@ -70,6 +70,12 @@ namespace utils {
                const std::string& service,
                const std::string& cause) const noexcept;
 
+      void
+      logVerbose(const std::string& message,
+                 const std::string& module,
+                 const std::string& service,
+                 const std::string& cause) const noexcept;
+
       bool
       canBeDisplayed(const Level& messageLevel) const noexcept;
 

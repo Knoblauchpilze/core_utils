@@ -26,9 +26,12 @@ namespace utils {
     else if (level == "info") {
       return Level::Info;
     }
-    else {
-      // Assume debug.
+    else if (level == "debug") {
       return Level::Debug;
+    }
+    else {
+      // Assume verbose.
+      return Level::Verbose;
     }
   }
 
@@ -49,8 +52,10 @@ namespace utils {
       case Level::Info:
         return "info";
       case Level::Debug:
-      default:
         return "debug";
+      case Level::Verbose:
+      default:
+        return "verbose";
     }
   }
 

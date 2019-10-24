@@ -45,8 +45,11 @@ namespace utils {
         colorFormatter = "36";
         break;
       case Color::White:
-      default:
         colorFormatter = "37";
+        break;
+      case Color::Gray:
+      default:
+        colorFormatter = "90";
         break;
     }
 
