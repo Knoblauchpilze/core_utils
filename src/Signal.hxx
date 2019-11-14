@@ -62,7 +62,10 @@ namespace utils {
   Signal<Args...>::disconnect(int id) const {
     std::lock_guard<std::mutex> guard(m_locker);
 
-    m_slots.erase(id);
+    // Handle error cases where the input identifier is obviously not valid.
+    if (id >= 0) {
+      m_slots.erase(id);
+    }
   }
 
   template <typename... Args>
