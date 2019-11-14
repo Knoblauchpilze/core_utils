@@ -63,7 +63,7 @@ namespace utils {
     std::lock_guard<std::mutex> guard(m_locker);
 
     // Handle error cases where the input identifier is obviously not valid.
-    if (id >= 0) {
+    if (id != NoID) {
       m_slots.erase(id);
     }
   }

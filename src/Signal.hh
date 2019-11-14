@@ -11,7 +11,16 @@ namespace utils {
   class Signal {
     public:
 
+      /**
+       * @brief - Convenience using to refer to a receiver function of a signal.
+       */
       using Receiver = std::function<void(Args...)>;
+
+      /**
+       * @brief - A convenience define to indicate that a signal identifier is
+       *          not valid.
+       */
+      static constexpr int NoID = -1;
 
     public:
 
