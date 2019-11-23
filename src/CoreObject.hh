@@ -2,6 +2,7 @@
 # define   CORE_OBJECT_HH
 
 # include <string>
+# include <mutex>
 # include <functional>
 # include "LogLevel.hh"
 # include "CoreException.hh"
@@ -42,6 +43,13 @@ namespace utils {
       virtual void
       error(const std::string& message,
             const CoreException& cause) const;
+
+    protected:
+
+      /**
+       * @brief - Convenience define to use a mutex guard.
+       */
+      using Guard = std::lock_guard<std::mutex>;
 
     private:
 
