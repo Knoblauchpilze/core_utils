@@ -86,6 +86,17 @@ namespace utils {
       void
       emit(Args... p);
 
+      /**
+       * @brief - Emits the signal to all the listeners forwarding the arguments `p`
+       *          and does so with a safety net, i.e. a way to capture exceptions.
+       * @param name - the name of the signal, used to provide nice error messages.
+       * @param p - a list of arguments to forward to listeners.
+       * @return - `true` if the execution went well and `false` otherwise.
+       */
+      bool
+      safeEmit(const std::string& name,
+               Args... p);
+
     private:
 
       using ReceiversMap = std::unordered_map<int, Receiver>;

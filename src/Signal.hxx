@@ -2,6 +2,7 @@
 # define   SIGNAL_HXX
 
 # include "Signal.hh"
+# include "CoreWrapper.hh"
 
 namespace utils {
 
@@ -92,6 +93,40 @@ namespace utils {
     {
       receiver->second(p...);
     }
+  }
+
+  template <typename... Args>
+  inline
+  bool
+  Signal<Args...>::safeEmit(const std::string& name,
+                            Args... p)
+  {
+    std::lock_guard<std::mutex> guard(m_locker);
+
+    bool allGood = true;
+
+    // Note that we cannot disconnect the signal from within this
+    // call otherwise we would run into iterator invalidation
+    // issues.
+    for (typename ReceiversMap::iterator receiver = m_slots.begin() ;
+         receiver != m_slots.cend() ;
+         ++receiver)
+    {
+      bool ret = utils::launchProtected(
+        [&]() {
+          receiver->second(p...);
+        },
+        name,
+        "signal",
+        "utils"
+      );
+
+      if (!ret) {
+        allGood = false;
+      }
+    }
+
+    return allGood;
   }
 
 }
