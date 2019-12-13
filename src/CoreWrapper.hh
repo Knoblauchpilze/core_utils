@@ -6,7 +6,7 @@
 
 namespace utils {
 
-  void
+  bool
   launchProtected(std::function<void(void)> func,
                   const std::string& functionName,
                   const std::string& module,

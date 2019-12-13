@@ -9,7 +9,7 @@
 namespace utils {
 
   inline
-  void
+  bool
   launchProtected(std::function<void(void)> func,
                   const std::string& functionName,
                   const std::string& module,
@@ -17,6 +17,8 @@ namespace utils {
   {
     try {
       func();
+
+      return true;
     }
     catch (const CoreException& e) {
       LoggerLocator::getLogger().logMessage(
@@ -44,6 +46,8 @@ namespace utils {
         service
       );
     }
+
+    return false;
   }
 
 }
