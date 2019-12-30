@@ -6,8 +6,8 @@
 # include <vector>
 # include <memory>
 # include <condition_variable>
-# include <core_utils/CoreObject.hh>
-# include <core_utils/Signal.hh>
+# include "CoreObject.hh"
+# include "Signal.hh"
 
 namespace utils {
 
