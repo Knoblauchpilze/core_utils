@@ -5,6 +5,7 @@
 
 namespace utils {
 
+  inline
   AsynchronousJob::AsynchronousJob(const std::string& name,
                                    const Priority& priority):
     CoreObject(name),
