@@ -8,26 +8,9 @@
 # include <condition_variable>
 # include "CoreObject.hh"
 # include "Signal.hh"
+# include "AsynchronousJob.hh"
 
 namespace utils {
-
-  /**
-   * @brief - Refer to an executable object which can be submitted to the thread pool.
-   *          Nothing is known about the object except that it has a `compute` method
-   *          that can be used to perform the associated processes.
-   */
-  class AsynchronousJob {
-    public:
-
-      /**
-       * @brief - Interface method allowing to schedule the operations related to this
-       *          object. Used by the thread pool to execute this job.
-       */
-      virtual void
-      compute() = 0;
-  };
-
-  using AsynchronousJobShPtr = std::shared_ptr<AsynchronousJob>;
 
   class ThreadPool: public CoreObject {
     public:
@@ -128,6 +111,15 @@ namespace utils {
       void
       resultsHandlingLoop();
 
+      /**
+       * @brief - Used to determine whether any jobs at all are registered. Scans all the priority queues
+       *          and return `true` if at least one of them is not empty. Assumes that the locker used to
+       *          protect the jobs' queues is already acquired.
+       * @return - `true` if at least one job is subtmitted (no matter the priority).
+       */
+      bool
+      hasJobs() const noexcept;
+
     private:
 
       /**
@@ -200,9 +192,20 @@ namespace utils {
       Mutex m_jobsLocker;
 
       /**
-       * @brief - The list of jobs currently available for processing.
+       * @brief - The list of jobs currently available for processing. Contains all the
+       *          high priority jobs.
        */
-      std::vector<Job> m_jobs;
+      std::vector<Job> m_hPrioJobs;
+
+      /**
+       * @brief - Similar to the `m_hPrioJobs` queue but contains normal priority jobs.
+       */
+      std::vector<Job> m_nPrioJobs;
+
+      /**
+       * @brief - Similar to the `m_hPrioJobs` queue but contains the low priority jobs.
+       */
+      std::vector<Job> m_lPrioJobs;
 
       /**
        * @brief - An index identifying the current batch of jobs being fed to the
@@ -259,7 +262,7 @@ namespace utils {
        *          Any listener whishing to update itself with the results of the process
        *          can register on this signal and be notified when that happens.
        */
-      utils::Signal<const std::vector<AsynchronousJobShPtr>&> onJobsCompleted;
+      Signal<const std::vector<AsynchronousJobShPtr>&> onJobsCompleted;
   };
 
   using ThreadPoolShPtr = std::shared_ptr<ThreadPool>;

@@ -16,6 +16,12 @@ namespace utils {
     return 3u;
   }
 
+  inline
+  bool
+  ThreadPool::hasJobs() const noexcept {
+    return !m_hPrioJobs.empty() || !m_nPrioJobs.empty() || !m_lPrioJobs.empty();
+  }
+
 }
 
 #endif    /* THREAD_POOL_HXX */

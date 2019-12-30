@@ -4,7 +4,7 @@
 namespace utils {
 
   ThreadPool::ThreadPool(unsigned size):
-    utils::CoreObject("threadpool"),
+    CoreObject("threadpool"),
 
     m_poolLocker(),
     m_waiter(),
@@ -15,7 +15,9 @@ namespace utils {
     m_threads(),
 
     m_jobsLocker(),
-    m_jobs(),
+    m_hPrioJobs(),
+    m_nPrioJobs(),
+    m_lPrioJobs(),
     m_batchIndex(0u),
 
     m_resultsLocker(),
@@ -40,10 +42,10 @@ namespace utils {
     Guard guard2(m_jobsLocker);
 
     // Determine whether some jobs have to be processed.
-    if (m_jobs.empty()) {
+    if (hasJobs()) {
       log(
         std::string("Tried to start jobs processing but none are defined"),
-        utils::Level::Warning
+        Level::Warning
       );
 
       return;
@@ -66,7 +68,9 @@ namespace utils {
     // Invalidate jobs if needed: this include all the remaining jobs to process
     // but also notification about the ones currently being processed.
     if (invalidate) {
-      m_jobs.clear();
+      m_hPrioJobs.clear();
+      m_nPrioJobs.clear();
+      m_lPrioJobs.clear();
     }
 
     {
@@ -76,7 +80,43 @@ namespace utils {
 
     // Build the job by providing the batch index for these jobs.
     for (unsigned id = 0u ; id < jobs.size() ; ++id) {
-      m_jobs.push_back(
+      // Consistency check.
+      if (jobs[id] == nullptr) {
+        log(
+          std::string("Discarding invalid null job ") + std::to_string(id),
+          Level::Warning
+        );
+
+        continue;
+      }
+
+      std::vector<Job>* queue = nullptr;
+
+      switch (jobs[id]->getPriority()) {
+        case Priority::High:
+          queue = &m_hPrioJobs;
+          break;
+        case Priority::Normal:
+          queue = &m_nPrioJobs;
+          break;
+        case Priority::Low:
+        default:
+          // Assume low priority for unhandled priority.
+          queue = &m_lPrioJobs;
+          break;
+      }
+      
+      if (queue == nullptr) {
+        log(
+          std::string("Could not find adequate queue for job \"") + jobs[id]->getName() + "\" with priority " +
+          std::to_string(static_cast<int>(jobs[id]->getPriority())),
+          Level::Error
+        );
+
+        continue;
+      }
+
+      queue->push_back(
         Job{
           jobs[id],
           m_batchIndex
@@ -93,9 +133,13 @@ namespace utils {
 
     // Clear the internal queue so that no more jobs can be fetched.
     m_jobsAvailable = false;
-    m_jobs.clear();
 
-    log("Clearing " + std::to_string(m_jobs.size()) + " remaining job(s), next batch will be " + std::to_string(m_batchIndex));
+    std::size_t count = m_hPrioJobs.size() + m_nPrioJobs.size() + m_lPrioJobs.size();
+    log("Clearing " + std::to_string(count) + " remaining job(s), next batch will be " + std::to_string(m_batchIndex));
+
+    m_hPrioJobs.clear();
+    m_nPrioJobs.clear();
+    m_lPrioJobs.clear();
 
     // Increment the batch index to mark any currently processing job
     // as invalid when it will complete.
@@ -180,7 +224,7 @@ namespace utils {
 
   void
   ThreadPool::jobFetchingLoop(unsigned threadID) {
-    log("Creating thread " + std::to_string(threadID) + " for thread pool", utils::Level::Verbose);
+    log("Creating thread " + std::to_string(threadID) + " for thread pool", Level::Verbose);
 
     // Create the locker to use to wait for job to do.
     UniqueGuard tLock(m_poolLocker);
@@ -204,20 +248,29 @@ namespace utils {
       // Attempt to retrieve a job to process.
       Job job = Job{nullptr, 0u};
       unsigned batch = 0u;
-      unsigned remaining = 0u;
+      std::size_t remaining = 0u;
 
       {
         Guard guard(m_jobsLocker);
 
-        if (!m_jobs.empty()) {
-          job = m_jobs.back();
-          m_jobs.pop_back();
+        // Fetch the highest priority job available.
+        if (!m_hPrioJobs.empty()) {
+          job = m_hPrioJobs.back();
+          m_hPrioJobs.pop_back();
+        }
+        else if (!m_nPrioJobs.empty()) {
+          job = m_nPrioJobs.back();
+          m_nPrioJobs.pop_back();
+        }
+        else if (!m_lPrioJobs.empty()) {
+          job = m_lPrioJobs.back();
+          m_lPrioJobs.pop_back();
         }
 
-        m_jobsAvailable = !m_jobs.empty();
+        m_jobsAvailable = hasJobs();
         batch = m_batchIndex;
 
-        remaining = m_jobs.size();
+        remaining = m_hPrioJobs.size() + m_nPrioJobs.size() + m_lPrioJobs.size();
       }
 
       // Unlock the pool mutex so that we don't block other threads while
@@ -229,7 +282,7 @@ namespace utils {
       if (job.task != nullptr) {
         log(
           "Processing job for batch " + std::to_string(batch) + " in thread " + std::to_string(threadID) + " (remaining: " + std::to_string(remaining) + ")",
-          utils::Level::Verbose
+          Level::Verbose
         );
 
         job.task->compute();
@@ -246,7 +299,7 @@ namespace utils {
       tLock.lock();
     }
 
-    log("Terminating thread " + std::to_string(threadID) + " for scheduler pool", utils::Level::Verbose);
+    log("Terminating thread " + std::to_string(threadID) + " for scheduler pool", Level::Verbose);
   }
 
   void
