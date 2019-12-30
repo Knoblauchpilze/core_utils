@@ -42,7 +42,7 @@ namespace utils {
     Guard guard2(m_jobsLocker);
 
     // Determine whether some jobs have to be processed.
-    if (hasJobs()) {
+    if (!hasJobs()) {
       log(
         std::string("Tried to start jobs processing but none are defined"),
         Level::Warning
