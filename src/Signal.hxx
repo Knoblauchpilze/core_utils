@@ -112,7 +112,7 @@ namespace utils {
          receiver != m_slots.cend() ;
          ++receiver)
     {
-      bool ret = utils::launchProtected(
+      bool ret = launchProtected(
         [&]() {
           receiver->second(p...);
         },
