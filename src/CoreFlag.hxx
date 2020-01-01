@@ -275,6 +275,13 @@ namespace utils {
 
   template <typename Enum>
   inline
+  bool
+  CoreFlag<Enum>::empty() const noexcept {
+    return m_bits.none();
+  }
+
+  template <typename Enum>
+  inline
   std::string
   CoreFlag<Enum>::toString() const noexcept {
     std::string out;

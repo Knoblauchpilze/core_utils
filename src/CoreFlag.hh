@@ -239,6 +239,13 @@ namespace utils {
       clear() noexcept;
 
       /**
+       * @brief - Return `true` if this flag is empty (i.e. no bits are set).
+       * @return - `true` if the flag is empty and `false` otherwise.
+       */
+      bool
+      empty() const noexcept;
+
+      /**
        * @brief - Writes this flag as a human readable string where each activated bit is
        *          dumped by its name. We are guaranteed to be able to find a name for each
        *          bit as the only way to add them is through the `addNamedBit` method.
