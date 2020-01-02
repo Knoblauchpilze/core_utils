@@ -105,7 +105,7 @@ namespace utils {
           queue = &m_lPrioJobs;
           break;
       }
-      
+
       if (queue == nullptr) {
         log(
           std::string("Could not find adequate queue for job \"") + jobs[id]->getName() + "\" with priority " +
