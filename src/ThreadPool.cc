@@ -161,6 +161,12 @@ namespace utils {
       );
     }
 
+    // Start the pool.
+    {
+      UniqueGuard guard3(m_poolLocker);
+      m_poolRunning = true;
+    }
+
     // Protect from concurrent creation of the pool.
     Guard guard2(m_threadsLocker);
 
@@ -172,10 +178,6 @@ namespace utils {
         id
       );
     }
-
-    // Start the pool.
-    UniqueGuard guard3(m_poolLocker);
-    m_poolRunning = true;
   }
 
   void
