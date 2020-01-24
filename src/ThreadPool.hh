@@ -28,7 +28,7 @@ namespace utils {
        * @brief - Used to destroy the pool and terminate all the threads used to process
        *          the jobs. The jobs will be finished before destroying the threads.
        */
-      ~ThreadPool();
+      virtual ~ThreadPool();
 
       /**
        * @brief - Used to notify that some jobs have been inserted into the internal
