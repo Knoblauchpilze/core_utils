@@ -3,17 +3,9 @@
 
 # include <memory>
 # include "CoreObject.hh"
+# include "JobPriority.hh"
 
 namespace utils {
-
-  /**
-   * @brief - Defines the possible priority for a job.
-   */
-  enum class Priority {
-    Low,
-    Normal,
-    High
-  };
 
   class AsynchronousJob: public CoreObject {
     public:

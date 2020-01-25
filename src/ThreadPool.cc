@@ -163,12 +163,12 @@ namespace utils {
 
     // Start the pool.
     {
-      UniqueGuard guard3(m_poolLocker);
+      UniqueGuard guard(m_poolLocker);
       m_poolRunning = true;
     }
 
     // Protect from concurrent creation of the pool.
-    Guard guard2(m_threadsLocker);
+    Guard guard(m_threadsLocker);
 
     m_threads.resize(size);
     for (unsigned id = 0u ; id < m_threads.size() ; ++id) {
