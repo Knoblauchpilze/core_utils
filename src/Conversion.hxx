@@ -115,7 +115,7 @@ namespace utils {
 
     int conv = convertToInt(text, &valid);
 
-    if (!valid || conv < 0) {
+    if (!valid) {
       converted = false;
       return def;
     }
@@ -136,7 +136,7 @@ namespace utils {
 
     float conv = convertToFloat(text, &valid);
 
-    if (!valid || conv < 0) {
+    if (!valid) {
       converted = false;
       return def;
     }
