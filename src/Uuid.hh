@@ -49,6 +49,14 @@ namespace utils {
 
       static const int sk_uuidLength = 32;
 
+      /**
+       * @brief - Contains the charset used to generate the
+       *          identifiers.
+       */
+      static constexpr char* sk_chars = "abcdef0123456789";
+
+      static constexpr int sk_charset = 16;
+
       std::vector<uint8_t> m_data;
   };
 

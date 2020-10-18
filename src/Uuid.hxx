@@ -131,15 +131,13 @@ namespace utils {
   inline
   void
   Uuid::generate() noexcept {
-    std::string chars = "abcdef0123456789";
-
     std::random_device seed;
     std::default_random_engine re(seed());
-    std::uniform_int_distribution<int> rng(0, chars.size());
+    std::uniform_int_distribution<int> rng(0, sk_charset - 1);
 
     // Generate something like: "47183823-2574-4bfd-b411-99ed177d3e43"
     for (unsigned index = 0u ; index < m_data.size() ; ++index) {
-      m_data[index] = chars[rng(re)];
+      m_data[index] = sk_chars[rng(re)];
     }
   }
 
