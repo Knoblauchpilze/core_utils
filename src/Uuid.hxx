@@ -4,6 +4,8 @@
 # include "Uuid.hh"
 # include <random>
 
+# include <iostream>
+
 namespace utils {
 
   inline
@@ -119,6 +121,62 @@ namespace utils {
   Uuid
   Uuid::create() {
     return Uuid(true);
+  }
+
+  inline
+  Uuid
+  Uuid::create(const std::string& uuid) noexcept {
+    // Generate an identifier from the first `sk_uuidLength`
+    // valid characters from the string. In case the string
+    // does not seem valid we will return an invalid uuid.
+    // Corresponds to the uuid and the separating `-` chars.
+    unsigned expected = sk_uuidLength + 4u;
+
+    if (uuid.size() != expected) {
+      return Uuid();
+    }
+
+    Uuid id;
+    id.m_data.resize(sk_uuidLength);
+
+    // Interpret a string like the following one:
+    // `47183823-2574-4bfd-b411-99ed177d3e43`.
+    for (unsigned index = 0u ; index < expected ; ++index) {
+      // Prevent interpretation of `-` characters.
+      if (index == 8u || index == 13u || index == 18u || index == 23u) {
+        continue;
+      }
+
+      // Offset to account for `-` characters.
+      unsigned i = index;
+      if (index > 8u) {
+        --i;
+      }
+      if (index > 13u) {
+        --i;
+      }
+      if (index > 18u) {
+        --i;
+      }
+      if (index > 23u) {
+        --i;
+      }
+
+      // Interpret the character knowing that the
+      // charset is "abcdef0123456789".
+      char a = uuid[index];
+
+      id.m_data[i] = 'a';
+
+      if (a >= 'a' && a <= 'f') {
+        id.m_data[i] = a;
+      }
+      if (a >= '0' && a <= '9') {
+        id.m_data[i] = a;
+      }
+    }
+
+    return id;
   }
 
   inline

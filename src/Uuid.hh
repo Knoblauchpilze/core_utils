@@ -38,6 +38,10 @@ namespace utils {
       Uuid
       create();
 
+      static
+      Uuid
+      create(const std::string& uuid) noexcept;
+
     private:
 
       Uuid(const bool valid);
