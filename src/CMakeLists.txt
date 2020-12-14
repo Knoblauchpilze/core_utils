@@ -15,7 +15,7 @@ add_library (core_utils SHARED
   ${SOURCES}
   )
 
-set(CORE_UTILS_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}" PARENT_SCOPE)
+set (CORE_UTILS_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}" PARENT_SCOPE)
 
 target_link_libraries(core_utils
   )
