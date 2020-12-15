@@ -9,6 +9,7 @@ set (SOURCES
   LoggerLocator.cc
   CoreObject.cc
   ThreadPool.cc
+  RNG.cc
   )
 
 add_library (core_utils SHARED
