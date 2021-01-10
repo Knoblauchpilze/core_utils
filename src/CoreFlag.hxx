@@ -200,7 +200,7 @@ namespace utils {
 
   template <typename Enum>
   inline
-  bool
+  void
   CoreFlag<Enum>::set(const Enum& key) {
     // Attempt to retrieve the index for this key.
     int id = getIdFor(key);
@@ -211,7 +211,7 @@ namespace utils {
         std::string("Could not set bit ") + getNameForKey(key) + " in flag",
         getName(),
         sk_serviceName,
-        std::string("Associated bit not found")
+        std::string("Bit not found among ") + std::to_string(m_descs.size())
       );
     }
 
@@ -220,7 +220,7 @@ namespace utils {
 
   template <typename Enum>
   inline
-  bool
+  void
   CoreFlag<Enum>::unset(const Enum& key) {
     // Attempt to retrieve the index for this key.
     int id = getIdFor(key);

@@ -204,7 +204,7 @@ namespace utils {
        *              set.
        * @return - `true` if the value was effectively changed, `false` otherwise.
        */
-      bool
+      void
       set(const Enum& key);
 
       /**
@@ -215,9 +215,8 @@ namespace utils {
        *          through the `addBit` method beforehand.
        * @param id - the enumeration value for whichthe associated bit should be
        *             unset.
-       * @return - `true` if the value was effectively changed, `false` otherwise.
        */
-      bool
+      void
       unset(const Enum& key);
 
       /**
