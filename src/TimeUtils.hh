@@ -44,6 +44,17 @@ namespace utils {
   toMilliseconds(int ms) noexcept;
 
   /**
+   * @brief - Used to convert the input duration to the
+   *          corresponding floating point number of
+   *          milliseconds.
+   * @param d - the duration to convert.
+   * @return - the number of milliseconds in the input
+   *           duration.
+   */
+  float
+  toMilliseconds(const Duration& d) noexcept;
+
+  /**
    * @brief - Converts a timestamp to a human readable
    *          string.
    * @param t - the time to convert.

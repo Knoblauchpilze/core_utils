@@ -21,6 +21,17 @@ namespace utils {
   }
 
   inline
+  float
+  toMilliseconds(const Duration& d) noexcept {
+    // Convert to nanoseconds to keep as much precision
+    // as possible and then convert back to float.
+    auto s = std::chrono::duration_cast<Milliseconds>(d);
+    int ms = s.count();
+
+    return 1.0f * ms;
+  }
+
+  inline
   std::string
   timeToString(const TimeStamp& t) noexcept {
     // See here:
