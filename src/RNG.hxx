@@ -39,6 +39,34 @@ namespace utils {
     return rndFloat(min, max);
   }
 
+  inline
+  std::ostream&
+  RNG::operator<<(std::ostream& out) const {
+    out << m_rng;
+    return out;
+  }
+
+  inline
+  std::istream&
+  RNG::operator>>(std::istream& in) {
+    in >> m_rng;
+    return in;
+  }
+
+}
+
+inline
+std::ostream&
+operator<<(std::ostream& out, const utils::RNG& rng) noexcept {
+  rng << out;
+  return out;
+}
+
+inline
+std::istream&
+operator>>(std::istream& in, utils::RNG& rng) noexcept {
+  rng >> in;
+  return in;
 }
 
 #endif    /* RNG_HXX */

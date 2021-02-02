@@ -1,8 +1,10 @@
 #ifndef    RNG_HH
 # define   RNG_HH
 
-# include "CoreObject.hh"
 # include <random>
+# include <ostream>
+# include <istream>
+# include "CoreObject.hh"
 
 namespace utils {
 
@@ -64,6 +66,26 @@ namespace utils {
       float
       rndAngle(float min = 0.0f, float max = 6.283185307f) noexcept;
 
+      /**
+       * @brief - Serialization operator to allow easy export
+       *          of this object's data to any stream.
+       * @param out - the stream to serialize into.
+       * @return - the modified stream.
+       */
+      std::ostream&
+      operator<<(std::ostream& out) const;
+
+      /**
+       * @brief - Deserialization operator allowing to load the
+       *          properties to redefinan object from the input
+       *          stream.
+       * @param in - the input stream from which data should be
+       *             read.
+       * @return - the modified stream.
+       */
+      std::istream&
+      operator>>(std::istream& in);
+
     private:
 
       /**
@@ -75,6 +97,26 @@ namespace utils {
   };
 
 }
+
+/**
+ * @brief - Serialization function allowing to insert the representation
+ *          of the `RNG` object to the stream.
+ * @param out - the stream into which the RNG will be appended.
+ * @param rng - the `RNG` object to serialize.
+ * @return - the modified stream.
+ */
+std::ostream&
+operator<<(std::ostream& out, const utils::RNG& rng) noexcept;
+
+/**
+ * @brief - Deserialization function allowing to extract the representation
+ *          of the `RNG` object from the stream.
+ * @param int - the stream from which the RNG will be generated.
+ * @param rng - the `RNG` object into which the deserialization is performed.
+ * @return - the modified stream.
+ */
+std::istream&
+operator>>(std::istream& in, utils::RNG& rng) noexcept;
 
 # include "RNG.hxx"
 
