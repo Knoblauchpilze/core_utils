@@ -34,6 +34,9 @@ namespace utils {
       void
       invalidate() noexcept;
 
+      std::istream&
+      operator>>(std::istream& in) noexcept;
+
       static
       Uuid
       create();
@@ -71,6 +74,9 @@ operator<<(std::ostream& out, const utils::Uuid& uuid) noexcept;
 
 std::ostream&
 operator<<(const utils::Uuid& uuid, std::ostream& out) noexcept;
+
+std::istream&
+operator>>(std::istream& in, utils::Uuid& id) noexcept;
 
 # include "Uuid.hxx"
 # include "Uuid_specialization.hxx"

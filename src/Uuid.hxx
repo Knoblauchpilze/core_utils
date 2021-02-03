@@ -3,6 +3,7 @@
 
 # include "Uuid.hh"
 # include <random>
+# include <istream>
 
 namespace utils {
 
@@ -110,6 +111,21 @@ namespace utils {
   }
 
   inline
+  std::istream&
+  Uuid::operator>>(std::istream& in) noexcept {
+    constexpr unsigned expected = sk_uuidLength + 4 + 1;
+    char raw[expected];
+
+    in.get(raw, expected);
+
+    // Send this string to the creation method.
+    Uuid id = create(raw);
+    operator=(id);
+
+    return in;
+  }
+
+  inline
   bool
   Uuid::valid() const noexcept {
     return !m_data.empty();
@@ -212,5 +228,11 @@ operator<<(const utils::Uuid& uuid, std::ostream& out) noexcept {
   return operator<<(out, uuid);
 }
 
+inline
+std::istream&
+operator>>(std::istream& in, utils::Uuid& id) noexcept {
+  id >> in;
+  return in;
+}
 
 #endif    /* UUID_HXX */
