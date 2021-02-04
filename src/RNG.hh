@@ -111,7 +111,7 @@ operator<<(std::ostream& out, const utils::RNG& rng) noexcept;
 /**
  * @brief - Deserialization function allowing to extract the representation
  *          of the `RNG` object from the stream.
- * @param int - the stream from which the RNG will be generated.
+ * @param in - the stream from which the RNG will be generated.
  * @param rng - the `RNG` object into which the deserialization is performed.
  * @return - the modified stream.
  */
