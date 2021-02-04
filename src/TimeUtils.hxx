@@ -73,4 +73,31 @@ namespace utils {
 
 }
 
+inline
+std::ostream&
+operator<<(std::ostream& out, const utils::TimeStamp& t) noexcept {
+  // As per this link:
+  // https://stackoverflow.com/questions/36963373/saving-and-loading-stdchronotime-point-to-file
+  // We can serialize a timestamp by converting it to its
+  // epoch representation.
+  auto et = t.time_since_epoch().count();
+  out.write(reinterpret_cast<const char*>(&et), sizeof(et));
+
+  return out;
+}
+
+inline
+std::istream&
+operator>>(std::istream& in, utils::TimeStamp& t) noexcept {
+  std::chrono::system_clock::rep et;
+
+  t = utils::now();
+  in.read(reinterpret_cast<char*>(&et), sizeof(et));
+  if (in) {
+    t = utils::TimeStamp(std::chrono::system_clock::duration{et});
+  }
+
+  return in;
+}
+
 #endif    /* TIME_UTILS_HXX */

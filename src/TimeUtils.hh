@@ -88,6 +88,26 @@ namespace utils {
 
 }
 
+/**
+ * @brief - Serialization function allowing to insert the representation
+ *          of the `TimeStamp` object to the stream.
+ * @param out - the stream into which the `TimeStamp` will be appended.
+ * @param rng - the `TimeStamp` object to serialize.
+ * @return - the modified stream.
+ */
+std::ostream&
+operator<<(std::ostream& out, const utils::TimeStamp& t) noexcept;
+
+/**
+ * @brief - Deserialization function allowing to extract the representation
+ *          of a `TimeStamp` object from the stream.
+ * @param in - the stream from which the timestamp will be generated.
+ * @param t - the timestamp object into which the deserialization is performed.
+ * @return - the modified stream.
+ */
+std::istream&
+operator>>(std::istream& in, utils::TimeStamp& t) noexcept;
+
 # include "TimeUtils.hxx"
 
 #endif    /* TIME_UTILS_HH */
