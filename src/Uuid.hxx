@@ -98,7 +98,7 @@ namespace utils {
     }
 
     if (!valid()) {
-      display += "NaUuid";
+      display += sk_invalidUuidString;
     }
 
     return display;
@@ -113,10 +113,44 @@ namespace utils {
   inline
   std::istream&
   Uuid::operator>>(std::istream& in) noexcept {
-    constexpr unsigned expected = sk_uuidLength + 4 + 1;
+    // We have two main scenario here: either we
+    // have a valid identifier or we saved some
+    // invalid uuid.
+    // In the second case we're expecting less
+    // data than in the first case so we'll do
+    // it first: the expected string is given
+    // by `NaUuid`.
+    std::string iUuid(sk_invalidUuidString);
+    constexpr unsigned expected = sk_uuidLength + 4u + 1u;
+    unsigned invalidLength = iUuid.size() + 1u;
+    unsigned start = 0u;
+
     char raw[expected];
 
-    in.get(raw, expected);
+    // As the uuid might have been saved in a
+    // separated way from the previous data we
+    // might face a first space character in
+    // the stream: we want to skip that.
+    in.get(raw, 2);
+    if (raw[0] != ' ') {
+      --invalidLength;
+      ++start;
+    }
+
+    // Attempt to read invalid data (as if the
+    // saved uuid was invalid when saved).
+    in.get(&raw[start], invalidLength);
+
+    // In case the data read indicates that the
+    // uuid was invalid, stop here.
+    if (raw == iUuid) {
+      invalidate();
+      return in;
+    }
+
+    // In case the data did not match the invalid
+    // data, continue reading.
+    in.get(&raw[invalidLength], expected - invalidLength);
 
     // Send this string to the creation method.
     Uuid id = create(raw);

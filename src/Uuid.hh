@@ -64,6 +64,12 @@ namespace utils {
 
       static constexpr const int sk_charset = 16;
 
+      /**
+       * @brief - Defines the default string to represent an
+       *          invalid uuid.
+       */
+      static constexpr const char* sk_invalidUuidString = "NaUuid";
+
       std::vector<uint8_t> m_data;
   };
 
