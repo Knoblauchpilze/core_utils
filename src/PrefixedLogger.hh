@@ -12,12 +12,10 @@ namespace utils {
       /**
        * @brief - Create a wrapper around the specified logger with
        *          the specified module and service.
-       * @param logger - the logger to wrap.
        * @param service - the name of the service for this logger.
        * @param module - the name of the module for this logger.
        */
-      PrefixedLogger(Logger& logger,
-                     const std::string& service,
+      PrefixedLogger(const std::string& service,
                      const std::string& module);
 
       ~PrefixedLogger() = default;
@@ -76,11 +74,6 @@ namespace utils {
                const std::string& service = std::string()) const noexcept override;
 
     private:
-
-      /**
-       * @brief - The wrapped logger.
-       */
-      Logger& m_log;
 
       /**
        * @brief - The service attached to this logger.

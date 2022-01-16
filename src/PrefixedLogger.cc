@@ -1,5 +1,6 @@
 
 # include "PrefixedLogger.hh"
+# include "LoggerLocator.hh"
 
 namespace {
 
@@ -17,12 +18,9 @@ namespace {
 
 namespace utils {
 
-  PrefixedLogger::PrefixedLogger(Logger& logger,
-                                 const std::string& service,
+  PrefixedLogger::PrefixedLogger(const std::string& service,
                                  const std::string& module):
     Logger(),
-
-    m_log(logger),
 
     m_service(consolidate(service)),
     m_module(consolidate(module))
@@ -44,7 +42,7 @@ namespace utils {
 
   void
   PrefixedLogger::setLevel(const Level& level) noexcept {
-    m_log.setLevel(level);
+    LoggerLocator::getLogger().setLevel(level);
   }
 
   void
@@ -57,7 +55,7 @@ namespace utils {
     std::string mod = m_module + consolidate(module);
     std::string ser = m_service + consolidate(service);
 
-    m_log.logMessage(level, message, mod, ser, cause);
+    LoggerLocator::getLogger().logMessage(level, message, mod, ser, cause);
   }
 
   void
@@ -67,7 +65,7 @@ namespace utils {
                            const std::string& module,
                            const std::string& service) const noexcept
   {
-    logMessage(level, message, module, service, cause);
+    LoggerLocator::getLogger().logMessage(level, message, module, service, cause);
   }
 
 }
