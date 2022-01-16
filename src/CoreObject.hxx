@@ -15,13 +15,14 @@ namespace utils {
 
   inline
   void
-  CoreObject::allowLog(const bool logging) {
+  CoreObject::allowLog(bool logging) {
     m_allowLog = logging;
   }
 
   inline
   void
   CoreObject::setService(const std::string& service) noexcept {
+    m_log.setService(service);
     m_service = service;
   }
 
@@ -44,12 +45,7 @@ namespace utils {
                   const Level& level) const noexcept
   {
     if (m_allowLog) {
-      LoggerLocator::getLogger().logMessage(
-        level,
-        message,
-        getName(),
-        m_service
-      );
+      m_log.logMessage(level, message, "", "");
     }
   }
 

@@ -22,6 +22,17 @@ namespace utils {
     // Empty implementation.
   }
 
+  inline
+  void
+  NullLogger::logError(const Level& /*level*/,
+                       const std::string& /*message*/,
+                       const std::string& /*cause*/,
+                       const std::string& /*module*/,
+                       const std::string& /*service*/) const noexcept
+  {
+    // Empty implementation.
+  }
+
 }
 
 #endif    /* NULL_LOGGER_HXX */

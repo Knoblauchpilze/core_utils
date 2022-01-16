@@ -6,6 +6,7 @@ set (CMAKE_POSITION_INDEPENDENT_CODE ON)
 set (SOURCES
   CoreException.cc
   StdLogger.cc
+  PrefixedLogger.cc
   LoggerLocator.cc
   CoreObject.cc
   ThreadPool.cc

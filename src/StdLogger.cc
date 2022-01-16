@@ -34,11 +34,11 @@ namespace utils {
 
     // Use the first color to print the application and instance name.
     m_formatter.setStreamColor(output, StreamFormatter::Color::Magenta);
-    output << "[" << service << "] ";
+    output << service << " ";
     output << getTimestamp() << " ";
 
     m_formatter.setStreamColor(output, color);
-    output << "[" << convertLevelToLevelString(level) << "]" << " [" << module << "] ";
+    output << "[" << convertLevelToLevelString(level) << "]" << " " << module << " ";
     m_formatter.clearStreamFormat(output);
 
     output << message;

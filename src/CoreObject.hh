@@ -6,6 +6,7 @@
 # include <functional>
 # include "LogLevel.hh"
 # include "CoreException.hh"
+# include "PrefixedLogger.hh"
 
 namespace utils {
 
@@ -13,7 +14,7 @@ namespace utils {
     public:
 
       CoreObject(const std::string& name,
-                 const bool allowLog = true);
+                 bool allowLog = true);
 
       virtual ~CoreObject();
 
@@ -21,7 +22,7 @@ namespace utils {
       getName() const noexcept;
 
       void
-      allowLog(const bool logging);
+      allowLog(bool logging);
 
     protected:
 
@@ -53,8 +54,24 @@ namespace utils {
 
     private:
 
+      /**
+       * @brief - The internal logger use by this object.
+       */
+      utils::PrefixedLogger m_log;
+
+      /**
+       * @brief - The name of the object.
+       */
       std::string m_name;
+
+      /**
+       * @brief - The service attached to the object.
+       */
       std::string m_service;
+
+      /**
+       * @brief - Whether or not the logger is enabled.
+       */
       bool m_allowLog;
   };
 

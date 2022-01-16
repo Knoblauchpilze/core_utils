@@ -54,6 +54,17 @@ namespace utils {
 
   inline
   void
+  StdLogger::logError(const Level& level,
+                      const std::string& message,
+                      const std::string& cause,
+                      const std::string& module,
+                      const std::string& service) const noexcept
+  {
+    logMessage(level, message, module, service, cause);
+  }
+
+  inline
+  void
   StdLogger::logFatal(const std::string& message,
                       const std::string& module,
                       const std::string& service,
