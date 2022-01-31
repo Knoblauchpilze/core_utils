@@ -38,6 +38,10 @@ namespace utils {
           const Level& level = Level::Debug) const noexcept;
 
       virtual void
+      warn(const std::string& message,
+           const std::string& cause = std::string()) const;
+
+      virtual void
       error(const std::string& message,
             const std::string& cause = std::string()) const;
 

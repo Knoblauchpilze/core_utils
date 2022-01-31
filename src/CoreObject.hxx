@@ -51,6 +51,16 @@ namespace utils {
 
   inline
   void
+  CoreObject::warn(const std::string& message,
+                   const std::string& cause) const
+  {
+    if (m_allowLog) {
+      m_log.logMessage(utils::Level::Warning, message, "", "", cause);
+    }
+  }
+
+  inline
+  void
   CoreObject::error(const std::string& message,
                     const std::string& cause) const
   {
