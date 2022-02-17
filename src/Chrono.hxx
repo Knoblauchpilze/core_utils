@@ -8,9 +8,11 @@ namespace utils {
   template <class Duration>
   inline
   Chrono<Duration>::Chrono(const std::string& message,
-                 const std::string& name):
+                           const std::string& name,
+                           const Level& severity):
     CoreObject(name),
-    m_scopes()
+    m_scopes(),
+    m_severity(severity)
   {
     setService(std::string("chrono"));
     addScope(message);
@@ -64,7 +66,8 @@ namespace utils {
     log(
       scope.first + " took " + std::to_string(duration) + " " +
       std::to_string(Duration::period::num) + "/" + std::to_string(Duration::period::den) +
-      "s"
+      "s",
+      m_severity
     );
   }
 
@@ -78,7 +81,7 @@ namespace utils {
     int duration = std::chrono::duration_cast<std::chrono::milliseconds>(now - scope.second).count();
 
     // Log the message.
-    log(scope.first + " took " + std::to_string(duration) + "ms");
+    log(scope.first + " took " + std::to_string(duration) + "ms", m_severity);
   }
 
   template <>
@@ -90,7 +93,7 @@ namespace utils {
     int duration = std::chrono::duration_cast<std::chrono::seconds>(now - scope.second).count();
 
     // Log the message.
-    log(scope.first + " took " + std::to_string(duration) + "s");
+    log(scope.first + " took " + std::to_string(duration) + "s", m_severity);
   }
 
   template <>
@@ -102,7 +105,7 @@ namespace utils {
     int duration = std::chrono::duration_cast<std::chrono::microseconds>(now - scope.second).count();
 
     // Log the message.
-    log(scope.first + " took " + std::to_string(duration) + "mics");
+    log(scope.first + " took " + std::to_string(duration) + "mics", m_severity);
   }
 
 }

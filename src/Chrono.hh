@@ -13,7 +13,8 @@ namespace utils {
     public:
 
       Chrono(const std::string& message,
-             const std::string& name = std::string("unnamed_chrono"));
+             const std::string& name = std::string("unnamed_chrono"),
+             const Level& severity = Level::Debug);
 
       ~Chrono();
 
@@ -34,6 +35,8 @@ namespace utils {
     private:
 
       std::stack<TimeScope> m_scopes;
+
+      Level m_severity;
   };
 
 }
