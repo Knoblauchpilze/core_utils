@@ -39,6 +39,13 @@ namespace utils {
       Level m_severity;
   };
 
+  /// @brief - Convenience alias for timer with known units.
+  using ChronoHours = Chrono<std::chrono::hours>;
+  using ChronoMinutes = Chrono<std::chrono::minutes>;
+  using ChronoSeconds = Chrono<std::chrono::seconds>;
+  using ChronoMilliseconds = Chrono<std::chrono::milliseconds>;
+  using ChronoMicroseconds = Chrono<std::chrono::microseconds>;
+  using ChronoNanoseconds = Chrono<std::chrono::nanoseconds>;
 }
 
 # include "Chrono.hxx"
