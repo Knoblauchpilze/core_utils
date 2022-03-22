@@ -11,6 +11,8 @@ set (SOURCES
   CoreObject.cc
   ThreadPool.cc
   RNG.cc
+  BitReader.cc
+  BitWriter.cc
   )
 
 add_library (core_utils SHARED
