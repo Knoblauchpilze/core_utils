@@ -35,8 +35,8 @@ namespace utils {
 
       /**
        * @brief - Used to generate a random number in the range
-       *          defined by the input value.
-       * @param min - the minimum value to generate.
+       *          [min; max] (INCLUDED).
+       * @param min - the minimum value allowed to be generated.
        * @param max - the maximum value allowed to be generated.
        * @return - a random value in the range `[min; max]`.
        */
@@ -45,9 +45,9 @@ namespace utils {
 
       /**
        * @brief - Used to generate a random number in the range
-       *          defined by the input value. Similar to the
-       *          `rndInt` method but for floats.
-       * @param min - the minimum value to generate.
+       *          [min; max] (INCLUDED). Similar to the `rndInt`
+       *          method but for floats.
+       * @param min - the minimum value allowed to be generated.
        * @param max - the maximum value allowed to be generated.
        * @return - a random value in the range `[min; max]`.
        */
@@ -56,7 +56,7 @@ namespace utils {
 
       /**
        * @brief - Used as a convenience method to generate a
-       *          random angle in the range `[min; max]`.
+       *          random angle in the range [min; max].
        * @param min - the min angle that can be generated.
        *              Default value is `0`.
        * @param max - the max angle that can be generated.
