@@ -21,6 +21,13 @@ namespace utils {
       ~PrefixedLogger() = default;
 
       /**
+       * @brief - Defines a new module for this logger.
+       * @param module - the new module.
+       */
+      void
+      setModule(const std::string& module) noexcept;
+
+      /**
        * @brief - Defines a new service for this logger.
        * @param service - the new service.
        */

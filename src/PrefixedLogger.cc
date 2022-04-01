@@ -27,17 +27,15 @@ namespace utils {
   {}
 
   void
+  PrefixedLogger::setModule(const std::string& module) noexcept {
+    // Surround the module by brackets.
+    m_module = consolidate(module);
+  }
+
+  void
   PrefixedLogger::setService(const std::string& service) noexcept {
     // Surround the service by brackets.
-    if (service.empty()) {
-      m_service = service;
-    }
-    else if (service[0] != '[') {
-      m_service = "[" + service + "]";
-    }
-    else {
-      m_service = service;
-    }
+    m_service = consolidate(service);
   }
 
   void

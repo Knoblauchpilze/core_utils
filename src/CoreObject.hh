@@ -27,6 +27,9 @@ namespace utils {
     protected:
 
       void
+      setName(const std::string& name) noexcept;
+
+      void
       setService(const std::string& service) noexcept;
 
       void

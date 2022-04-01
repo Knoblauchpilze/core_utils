@@ -21,6 +21,13 @@ namespace utils {
 
   inline
   void
+  CoreObject::setName(const std::string& name) noexcept {
+    m_log.setModule(name);
+    m_name = name;
+  }
+
+  inline
+  void
   CoreObject::setService(const std::string& service) noexcept {
     m_log.setService(service);
     m_service = service;
