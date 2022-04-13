@@ -6,6 +6,15 @@
 
 namespace utils {
 
+  /**
+   * @brief - Used to consolidate the input string to surround
+   *          it by brackets if not done.
+   * @param str - the string to consolidate.
+   * @return - the consolidated string.
+   */
+  std::string
+  consolidate(const std::string& str) noexcept;
+
   class PrefixedLogger: public Logger {
     public:
 
@@ -28,11 +37,29 @@ namespace utils {
       setModule(const std::string& module) noexcept;
 
       /**
+       * @brief - Add a new module to the list. It will be added
+       *          at the end of the list and will thus show up at
+       *          the end of the log messages.
+       * @param module - the new module to register.
+       */
+      void
+      addModule(const std::string& module) noexcept;
+
+      /**
        * @brief - Defines a new service for this logger.
        * @param service - the new service.
        */
       void
       setService(const std::string& service) noexcept;
+
+      /**
+       * @brief - Add a new service to the list. It will be added
+       *          at the end of the list and will thus show up at
+       *          the end of the log messages.
+       * @param service - the new service to register.
+       */
+      void
+      addService(const std::string& service) noexcept;
 
       /**
        * @brief - Implementation of the interface method. Uses the

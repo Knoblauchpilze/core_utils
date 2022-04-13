@@ -29,8 +29,23 @@ namespace utils {
       void
       setName(const std::string& name) noexcept;
 
+      /**
+       * @brief - Define the unique service for the object. It
+       *          reset any existing module.
+       * @param service - the unique service to assign to this
+       *                  object.
+       */
       void
       setService(const std::string& service) noexcept;
+
+      /**
+       * @brief - Add a new module to the list. It will be added
+       *          at the end of the list and will thus show up at
+       *          the end of the log messages.
+       * @param module - the new module to register.
+       */
+      void
+      addModule(const std::string& module) noexcept;
 
       void
       withSafetyNet(std::function<void(void)> func,

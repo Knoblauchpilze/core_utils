@@ -28,13 +28,6 @@ namespace utils {
 
   inline
   void
-  CoreObject::setService(const std::string& service) noexcept {
-    m_log.setService(service);
-    m_service = service;
-  }
-
-  inline
-  void
   CoreObject::withSafetyNet(std::function<void(void)> func,
                             const std::string& function) const
   {

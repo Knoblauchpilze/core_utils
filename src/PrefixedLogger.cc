@@ -2,9 +2,8 @@
 # include "PrefixedLogger.hh"
 # include "LoggerLocator.hh"
 
-namespace {
+namespace utils {
 
-  inline
   std::string
   consolidate(const std::string& str) noexcept {
     if (str.empty() || str[0] == '[') {
@@ -13,10 +12,6 @@ namespace {
 
     return "[" + str + "]";
   }
-
-}
-
-namespace utils {
 
   PrefixedLogger::PrefixedLogger(const std::string& service,
                                  const std::string& module):
@@ -33,9 +28,19 @@ namespace utils {
   }
 
   void
+  PrefixedLogger::addModule(const std::string& module) noexcept {
+    m_module += consolidate(module);
+  }
+
+  void
   PrefixedLogger::setService(const std::string& service) noexcept {
     // Surround the service by brackets.
     m_service = consolidate(service);
+  }
+
+  void
+  PrefixedLogger::addService(const std::string& service) noexcept {
+    m_service += consolidate(service);
   }
 
   void

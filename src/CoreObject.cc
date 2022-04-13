@@ -14,5 +14,17 @@ namespace utils {
 
   CoreObject::~CoreObject() {}
 
+  void
+  CoreObject::setService(const std::string& service) noexcept {
+    m_service = consolidate(service);
+    m_log.setService(m_service);
+  }
+
+  void
+  CoreObject::addModule(const std::string& module) noexcept {
+    m_log.logMessage(utils::Level::Notice, "Service was " + m_service + " and " + module + " will be added");
+    m_log.addModule(module);
+  }
+
 }
 
