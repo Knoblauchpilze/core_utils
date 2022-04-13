@@ -22,7 +22,6 @@ namespace utils {
 
   void
   CoreObject::addModule(const std::string& module) noexcept {
-    m_log.logMessage(utils::Level::Notice, "Service was " + m_service + " and " + module + " will be added");
     m_log.addModule(module);
   }
 
