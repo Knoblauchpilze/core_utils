@@ -56,6 +56,9 @@ namespace utils {
           const Level& level = Level::Debug) const noexcept;
 
       virtual void
+      info(const std::string& message) const noexcept;
+
+      virtual void
       warn(const std::string& message,
            const std::string& cause = std::string()) const;
 
