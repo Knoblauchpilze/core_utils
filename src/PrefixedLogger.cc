@@ -29,7 +29,7 @@ namespace utils {
 
   void
   PrefixedLogger::addModule(const std::string& module) noexcept {
-    m_module += consolidate(module);
+    m_module += " " + consolidate(module);
   }
 
   void
@@ -40,7 +40,7 @@ namespace utils {
 
   void
   PrefixedLogger::addService(const std::string& service) noexcept {
-    m_service += consolidate(service);
+    m_service += " " + consolidate(service);
   }
 
   void
@@ -55,8 +55,15 @@ namespace utils {
                              const std::string& service,
                              const std::string& cause) const noexcept
   {
-    std::string mod = m_module + consolidate(module);
-    std::string ser = m_service + consolidate(service);
+    std::string mod = m_module;
+    if (!module.empty()) {
+      mod += " " + consolidate(module);
+    }
+
+    std::string ser = m_service;
+    if (!service.empty()) {
+      ser += " " + consolidate(service);
+    } 
 
     LoggerLocator::getLogger().logMessage(level, message, mod, ser, cause);
   }
