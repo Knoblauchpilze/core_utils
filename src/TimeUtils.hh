@@ -2,6 +2,7 @@
 # define   TIME_UTILS_HH
 
 # include <chrono>
+# include <string>
 
 namespace utils {
 
