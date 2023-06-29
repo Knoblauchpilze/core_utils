@@ -1,26 +1,20 @@
-#ifndef    ASYNCHRONOUS_JOB_HXX
-# define   ASYNCHRONOUS_JOB_HXX
 
-# include "AsynchronousJob.hh"
+#pragma once
+
+#include "AsynchronousJob.hh"
 
 namespace utils {
 
-  inline
-  AsynchronousJob::AsynchronousJob(const std::string& name,
-                                   const Priority& priority):
-    CoreObject(name),
+inline AsynchronousJob::AsynchronousJob(const std::string &name,
+                                        const Priority &priority)
+    : CoreObject(name),
 
-    m_priority(priority)
-  {
-    setService("job");
-  }
-
-  inline
-  Priority
-  AsynchronousJob::getPriority() const noexcept {
-    return m_priority;
-  }
-
+      m_priority(priority) {
+  setService("job");
 }
 
-#endif    /* ASYNCHRONOUS_JOB_HXX */
+inline auto AsynchronousJob::getPriority() const noexcept -> Priority {
+  return m_priority;
+}
+
+} // namespace utils

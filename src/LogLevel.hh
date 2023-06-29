@@ -1,30 +1,24 @@
-#ifndef    LOG_LEVEL_HH
-# define   LOG_LEVEL_HH
 
-# include <string>
+#pragma once
+
+#include <string>
 
 namespace utils {
 
-  // Various levels of logs.
-  enum class Level {
-    Verbose,
-    Debug,
-    Info,
-    Warning,
-    Notice,
-    Error,
-    Critical,
-    Fatal
-  };
+enum class Level {
+  Verbose,
+  Debug,
+  Info,
+  Warning,
+  Notice,
+  Error,
+  Critical,
+  Fatal
+};
 
-  Level
-  convertLevelStringToLevel(const Level& level) noexcept;
+auto convertLevelStringToLevel(const std::string &level) noexcept -> Level;
+auto convertLevelToLevelString(const Level level) -> std::string;
 
-  std::string
-  convertLevelToLevelString(const Level& level);
+} // namespace utils
 
-}
-
-# include "LogLevel.hxx"
-
-#endif    /* LOG_LEVEL_HH */
+#include "LogLevel.hxx"

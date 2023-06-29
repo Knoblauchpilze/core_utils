@@ -1,90 +1,62 @@
-#ifndef    UUID_HH
-# define   UUID_HH
 
-# include <string>
-# include <vector>
+#pragma once
+
+#include <string>
+#include <vector>
 
 namespace utils {
 
-  class Uuid {
-    public:
+class Uuid {
+public:
+  Uuid();
 
-      Uuid();
+  Uuid(const Uuid &uuid);
 
-      Uuid(const Uuid& uuid);
+  Uuid &operator=(const Uuid &rhs) noexcept;
 
-      Uuid&
-      operator=(const Uuid& rhs) noexcept;
+  bool operator==(const Uuid &rhs) const noexcept;
 
-      bool
-      operator==(const Uuid& rhs) const noexcept;
+  bool operator!=(const Uuid &rhs) const noexcept;
 
-      bool
-      operator!=(const Uuid& rhs) const noexcept;
+  bool operator<(const Uuid &rhs) const noexcept;
 
-      bool
-      operator<(const Uuid& rhs) const noexcept;
+  auto toString() const noexcept -> std::string;
 
-      std::string
-      toString() const noexcept;
+  bool valid() const noexcept;
 
-      bool
-      valid() const noexcept;
+  void invalidate() noexcept;
 
-      void
-      invalidate() noexcept;
+  auto operator>>(std::istream &in) noexcept -> std::istream &;
 
-      std::istream&
-      operator>>(std::istream& in) noexcept;
+  static auto create() -> Uuid;
 
-      static
-      Uuid
-      create();
+  static auto create(const std::string &uuid) noexcept -> Uuid;
 
-      static
-      Uuid
-      create(const std::string& uuid) noexcept;
+private:
+  Uuid(const bool valid);
 
-    private:
+  void generate() noexcept;
 
-      Uuid(const bool valid);
+private:
+  static constexpr const int sk_uuidLength = 32;
 
-      void
-      generate() noexcept;
+  /// @brief - Contains the charset used to generate the identifiers.
+  static constexpr const char *sk_chars = "abcdef0123456789";
+  static constexpr const int sk_charset = 16;
 
-    private:
+  /// @brief - Defines the default string to represent an invalid uuid.
+  static constexpr const char *sk_invalidUuidString = "NaUuid";
 
-      static constexpr const int sk_uuidLength = 32;
+  std::vector<uint8_t> m_data;
+};
 
-      /**
-       * @brief - Contains the charset used to generate the
-       *          identifiers.
-       */
-      static constexpr const char* sk_chars = "abcdef0123456789";
+} // namespace utils
 
-      static constexpr const int sk_charset = 16;
+std::ostream &operator<<(std::ostream &out, const utils::Uuid &uuid) noexcept;
 
-      /**
-       * @brief - Defines the default string to represent an
-       *          invalid uuid.
-       */
-      static constexpr const char* sk_invalidUuidString = "NaUuid";
+std::ostream &operator<<(const utils::Uuid &uuid, std::ostream &out) noexcept;
 
-      std::vector<uint8_t> m_data;
-  };
+std::istream &operator>>(std::istream &in, utils::Uuid &id) noexcept;
 
-}
-
-std::ostream&
-operator<<(std::ostream& out, const utils::Uuid& uuid) noexcept;
-
-std::ostream&
-operator<<(const utils::Uuid& uuid, std::ostream& out) noexcept;
-
-std::istream&
-operator>>(std::istream& in, utils::Uuid& id) noexcept;
-
-# include "Uuid.hxx"
-# include "Uuid_specialization.hxx"
-
-#endif    /* UUID_HH */
+#include "Uuid.hxx"
+#include "Uuid_specialization.hxx"

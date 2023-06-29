@@ -1,35 +1,25 @@
-#ifndef    LOGGER_LOCATOR_HH
-# define   LOGGER_LOCATOR_HH
 
-# include <string>
-# include "Logger.hh"
-# include "NullLogger.hh"
+#pragma once
+
+#include "Logger.hh"
+#include "NullLogger.hh"
+#include <string>
 
 namespace utils {
 
-  class LoggerLocator {
-    public:
+class LoggerLocator {
+public:
+  static void initialize();
 
-      static
-      void
-      initialize();
+  static Logger &getLogger();
 
-      static
-      Logger&
-      getLogger();
+  static void provide(Logger *logger);
 
-      static
-      void
-      provide(Logger* logger);
+private:
+  static Logger *m_logger;
+  static NullLogger sk_nullLogger;
+};
 
-    private:
+} // namespace utils
 
-      static Logger* m_logger;
-      static NullLogger sk_nullLogger;
-  };
-
-}
-
-# include "LoggerLocator.hxx"
-
-#endif    /* LOGGER_LOCATOR_HH */
+#include "LoggerLocator.hxx"

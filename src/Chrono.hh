@@ -1,53 +1,45 @@
-#ifndef    CHRONO_HH
-# define   CHRONO_HH
 
-# include <stack>
-# include <string>
-# include <chrono>
-# include "CoreObject.hh"
+#pragma once
+
+#include "CoreObject.hh"
+#include <chrono>
+#include <stack>
+#include <string>
 
 namespace utils {
 
-  template <class Duration = std::chrono::milliseconds>
-  class Chrono: public CoreObject {
-    public:
+template <class Duration = std::chrono::milliseconds>
+class Chrono : public CoreObject {
+public:
+  Chrono(const std::string &message,
+         const std::string &name = std::string("unnamed_chrono"),
+         const Level &severity = Level::Debug);
 
-      Chrono(const std::string& message,
-             const std::string& name = std::string("unnamed_chrono"),
-             const Level& severity = Level::Debug);
+  ~Chrono();
 
-      ~Chrono();
+  void addScope(const std::string &message);
 
-      void
-      addScope(const std::string& message);
+  void finish();
 
-      void
-      finish();
+private:
+  using Timestamp = std::chrono::time_point<std::chrono::steady_clock>;
+  using TimeScope = std::pair<std::string, Timestamp>;
 
-    private:
+  void finalize(const TimeScope &scope);
 
-      using Timestamp = std::chrono::time_point<std::chrono::steady_clock>;
-      using TimeScope = std::pair<std::string, Timestamp>;
+private:
+  std::stack<TimeScope> m_scopes;
 
-      void
-      finalize(const TimeScope& scope);
+  Level m_severity;
+};
 
-    private:
+/// @brief - Convenience alias for timer with known units.
+using ChronoHours = Chrono<std::chrono::hours>;
+using ChronoMinutes = Chrono<std::chrono::minutes>;
+using ChronoSeconds = Chrono<std::chrono::seconds>;
+using ChronoMilliseconds = Chrono<std::chrono::milliseconds>;
+using ChronoMicroseconds = Chrono<std::chrono::microseconds>;
+using ChronoNanoseconds = Chrono<std::chrono::nanoseconds>;
+} // namespace utils
 
-      std::stack<TimeScope> m_scopes;
-
-      Level m_severity;
-  };
-
-  /// @brief - Convenience alias for timer with known units.
-  using ChronoHours = Chrono<std::chrono::hours>;
-  using ChronoMinutes = Chrono<std::chrono::minutes>;
-  using ChronoSeconds = Chrono<std::chrono::seconds>;
-  using ChronoMilliseconds = Chrono<std::chrono::milliseconds>;
-  using ChronoMicroseconds = Chrono<std::chrono::microseconds>;
-  using ChronoNanoseconds = Chrono<std::chrono::nanoseconds>;
-}
-
-# include "Chrono.hxx"
-
-#endif    /* CHRONO_HH */
+#include "Chrono.hxx"
