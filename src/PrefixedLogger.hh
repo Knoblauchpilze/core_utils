@@ -29,6 +29,10 @@ namespace utils {
 
       ~PrefixedLogger() = default;
 
+      /// @brief - Return the current module for this logger.
+      /// @return - a string representing the module.
+      auto getModule() const -> std::string;
+
       /**
        * @brief - Defines a new module for this logger.
        * @param module - the new module.

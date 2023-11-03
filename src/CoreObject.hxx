@@ -74,7 +74,7 @@ namespace utils {
   {
     throw CoreException(
       message,
-      getName(),
+      m_log.getModule(),
       m_service,
       cause
     );
@@ -87,7 +87,7 @@ namespace utils {
   {
     throw CoreException(
       message,
-      getName(),
+      m_log.getModule(),
       m_service,
       cause
     );

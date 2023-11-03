@@ -21,6 +21,11 @@ namespace utils {
     m_module(consolidate(module))
   {}
 
+  auto
+  PrefixedLogger::getModule() const -> std::string {
+    return m_module;
+  }
+
   void
   PrefixedLogger::setModule(const std::string& module) noexcept {
     // Surround the module by brackets.
