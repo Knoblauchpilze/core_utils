@@ -75,27 +75,27 @@ void PrefixedLogger::setLevel(const Severity severity) noexcept
 
 void PrefixedLogger::verbose(const std::string &message) const
 {
-  verbose(message, m_module, m_service);
+  Locator::getLogger().verbose(message, m_module, m_service);
 }
 void PrefixedLogger::debug(const std::string &message) const
 {
-  debug(message, m_module, m_service);
+  Locator::getLogger().debug(message, m_module, m_service);
 }
 void PrefixedLogger::info(const std::string &message) const
 {
-  info(message, m_module, m_service);
+  Locator::getLogger().info(message, m_module, m_service);
 }
 void PrefixedLogger::notice(const std::string &message) const
 {
-  notice(message, m_module, m_service);
+  Locator::getLogger().notice(message, m_module, m_service);
 }
 void PrefixedLogger::warn(const std::string &message, const std::optional<std::string> &cause) const
 {
-  warn(message, m_module, m_service, cause);
+  Locator::getLogger().warn(message, m_module, m_service, cause);
 }
 void PrefixedLogger::error(const std::string &message, const std::optional<std::string> &cause) const
 {
-  error(message, m_module, m_service, cause);
+  Locator::getLogger().error(message, m_module, m_service, cause);
 }
 
 namespace {
