@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "PrefixedLogger.hh"
+#include "log/PrefixedLogger.hh"
 #include <functional>
 #include <string>
 

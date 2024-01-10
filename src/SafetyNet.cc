@@ -2,6 +2,7 @@
 #include "SafetyNet.hh"
 #include "CoreException.hh"
 #include "Locator.hh"
+#include "PrefixedLogger.hh"
 
 namespace utils {
 

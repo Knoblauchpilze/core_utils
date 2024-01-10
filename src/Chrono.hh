@@ -2,7 +2,6 @@
 #pragma once
 
 #include "CoreObject.hh"
-#include "Severity.hh"
 #include <chrono>
 #include <stack>
 #include <string>

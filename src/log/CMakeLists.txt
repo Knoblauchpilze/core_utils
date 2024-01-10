@@ -10,6 +10,4 @@ target_sources (core_utils PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/NullLogger.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/Locator.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/PrefixedLogger.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/CoreException.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/SafetyNet.cc
 	)

@@ -2,7 +2,7 @@
 #pragma once
 
 #include "CoreException.hh"
-#include "PrefixedLogger.hh"
+#include "log/PrefixedLogger.hh"
 #include <functional>
 #include <mutex>
 #include <string>
