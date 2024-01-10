@@ -61,7 +61,7 @@ inline void Signal<Args...>::emit(Args... p)
   // issues.
   for (const auto &receiver : m_slots)
   {
-    receiver->second(p...);
+    receiver.second(p...);
   }
 }
 
