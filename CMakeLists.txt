@@ -21,3 +21,16 @@ set (CMAKE_POSITION_INDEPENDENT_CODE ON)
 add_subdirectory(
 	${CMAKE_CURRENT_SOURCE_DIR}/src
 	)
+
+# https://stackoverflow.com/questions/48428647/how-to-use-cmake-to-install
+install (TARGETS core_utils LIBRARY DESTINATION lib)
+
+# https://stackoverflow.com/questions/48212771/cmake-install-header-files-and-maintain-directory-hierarchy
+install (DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/src/
+	DESTINATION include/core_utils
+	FILES_MATCHING
+	PATTERN "*.hh")
+install (DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/src/
+	DESTINATION include/core_utils
+	FILES_MATCHING
+	PATTERN "*.hxx")

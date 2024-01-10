@@ -8,6 +8,7 @@ add_subdirectory(
 	)
 
 target_sources (core_utils PRIVATE
+	${CMAKE_CURRENT_SOURCE_DIR}/CoreObject.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/ThreadPool.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/RNG.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/BitReader.cc
