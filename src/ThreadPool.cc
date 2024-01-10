@@ -4,6 +4,8 @@
 namespace utils {
 constexpr auto MINIMUM_NUMBER_OF_THREADS = 3u;
 
+using Guard = std::lock_guard<std::mutex>;
+
 ThreadPool::ThreadPool(const unsigned size)
   : CoreObject("threadpool")
 {

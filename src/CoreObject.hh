@@ -4,7 +4,6 @@
 #include "CoreException.hh"
 #include "log/PrefixedLogger.hh"
 #include <functional>
-#include <mutex>
 #include <string>
 
 namespace utils {
@@ -44,7 +43,5 @@ class CoreObject
   std::string m_name{};
   log::PrefixedLogger m_logger;
 };
-
-using Guard = std::lock_guard<std::mutex>;
 
 } // namespace utils
