@@ -14,7 +14,7 @@ class CoreObject
   public:
   CoreObject(const std::string &name);
   CoreObject(const std::string &name, const bool allowLog);
-  ~CoreObject() = default;
+  virtual ~CoreObject() = default;
 
   auto getName() const -> const std::string &;
   void setAllowLog(const bool allowLog) noexcept;
