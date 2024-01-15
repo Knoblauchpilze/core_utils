@@ -36,4 +36,58 @@ inline auto deserialize(std::istream &in, Enum &e) -> std::istream &
   return in;
 }
 
+template<typename T, std::enable_if_t<std::is_enum<T>::value, bool> = true>
+auto serialize(std::ostream &out, const std::optional<T> &value) -> std::ostream &
+{
+  out << value.has_value();
+  if (value)
+  {
+    serialize(out, *value);
+  }
+
+  return out;
+}
+
+template<typename T, std::enable_if_t<!std::is_enum<T>::value, bool> = true>
+auto serialize(std::ostream &out, const std::optional<T> &value) -> std::ostream &
+{
+  out << value.has_value();
+  if (value)
+  {
+    out << *value;
+  }
+
+  return out;
+}
+
+template<typename T, std::enable_if_t<std::is_enum<T>::value, bool> = true>
+auto deserialize(std::istream &in, std::optional<T> &value) -> std::istream &
+{
+  bool hasValue{false};
+  in >> hasValue;
+  if (hasValue)
+  {
+    T raw{};
+    deserialize(in, raw);
+    value = raw;
+  }
+
+  return in;
+}
+
+template<typename T, std::enable_if_t<!std::is_enum<T>::value, bool> = true>
+auto deserialize(std::istream &in, std::optional<T> &value) -> std::istream &
+{
+  bool hasValue{false};
+  in >> hasValue;
+  if (hasValue)
+  {
+    T raw{};
+    in >> raw;
+    value = raw;
+  }
+
+  return in;
+}
+
 } // namespace utils
