@@ -36,6 +36,27 @@ inline auto deserialize(std::istream &in, Enum &e) -> std::istream &
   return in;
 }
 
+inline auto serialize(std::ostream &out, const std::string &str) -> std::ostream &
+{
+  out << str.size();
+  if (!str.empty())
+  {
+    out << str;
+  }
+
+  return out;
+}
+
+inline auto deserialize(std::istream &in, std::string &str) -> std::istream &
+{
+  std::size_t size{};
+  in >> size;
+  str.resize(size);
+  in.read(str.data(), size);
+
+  return in;
+}
+
 template<typename T, std::enable_if_t<std::is_enum<T>::value, bool> = true>
 auto serialize(std::ostream &out, const std::optional<T> &value) -> std::ostream &
 {
