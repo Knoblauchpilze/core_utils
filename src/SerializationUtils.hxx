@@ -13,10 +13,7 @@ inline auto serialize(std::ostream &out, const Enum &e) -> std::ostream &
 
   const auto eAsChar = reinterpret_cast<const char *>(&e);
   const auto size    = sizeof(typename std::underlying_type<Enum>::type);
-  for (auto id = 0u; id < size; ++id)
-  {
-    out.put(eAsChar[id]);
-  }
+  out.write(eAsChar, size);
 
   return out;
 }
@@ -28,10 +25,7 @@ inline auto deserialize(std::istream &in, Enum &e) -> std::istream &
 
   const auto eAsChar = reinterpret_cast<char *>(&e);
   const auto size    = sizeof(typename std::underlying_type<Enum>::type);
-  for (auto id = 0u; id < size; ++id)
-  {
-    in >> eAsChar[id];
-  }
+  in.read(eAsChar, size);
 
   return in;
 }
