@@ -4,7 +4,6 @@
 #include "SerializationUtils.hh"
 
 namespace utils {
-
 template<typename T, std::enable_if_t<std::is_enum<T>::value, bool> = true>
 inline auto serialize(std::ostream &out, const T &e) -> std::ostream &
 {
@@ -16,7 +15,7 @@ inline auto serialize(std::ostream &out, const T &e) -> std::ostream &
 }
 
 template<typename T, std::enable_if_t<!std::is_enum<T>::value, bool> = true>
-auto serialize(std::ostream &out, const T &value) -> std::ostream &
+inline auto serialize(std::ostream &out, const T &value) -> std::ostream &
 {
   const auto valueAsChar = reinterpret_cast<const char *>(&value);
   const auto size        = sizeof(T);
@@ -36,7 +35,7 @@ inline auto deserialize(std::istream &in, T &e) -> std::istream &
 }
 
 template<typename T, std::enable_if_t<!std::is_enum<T>::value, bool> = true>
-auto deserialize(std::istream &in, T &value) -> std::istream &
+inline auto deserialize(std::istream &in, T &value) -> std::istream &
 {
   const auto valueAsChar = reinterpret_cast<char *>(&value);
   const auto size        = sizeof(T);
@@ -67,10 +66,11 @@ inline auto deserialize(std::istream &in, std::string &str) -> std::istream &
 }
 
 template<typename T, std::enable_if_t<std::is_enum<T>::value, bool> = true>
-auto serialize(std::ostream &out, const std::optional<T> &value) -> std::ostream &
+inline auto serialize(std::ostream &out, const std::optional<T> &value) -> std::ostream &
 {
-  out << value.has_value();
-  if (value)
+  const auto hasValue = value.has_value();
+  out.write(reinterpret_cast<const char *>(&hasValue), sizeof(bool));
+  if (hasValue)
   {
     serialize(out, *value);
   }
@@ -79,41 +79,46 @@ auto serialize(std::ostream &out, const std::optional<T> &value) -> std::ostream
 }
 
 template<typename T, std::enable_if_t<!std::is_enum<T>::value, bool> = true>
-auto serialize(std::ostream &out, const std::optional<T> &value) -> std::ostream &
+inline auto serialize(std::ostream &out, const std::optional<T> &value) -> std::ostream &
 {
-  out << value.has_value();
-  if (value)
+  const auto hasValue = value.has_value();
+  out.write(reinterpret_cast<const char *>(&hasValue), sizeof(bool));
+  if (hasValue)
   {
-    out << *value;
+    serialize(out, *value);
   }
 
   return out;
 }
 
 template<typename T, std::enable_if_t<std::is_enum<T>::value, bool> = true>
-auto deserialize(std::istream &in, std::optional<T> &value) -> std::istream &
+inline auto deserialize(std::istream &in, std::optional<T> &value) -> std::istream &
 {
   bool hasValue{false};
-  in >> hasValue;
+  in.read(reinterpret_cast<char *>(&hasValue), sizeof(bool));
   if (hasValue)
   {
     T raw{};
     deserialize(in, raw);
     value = raw;
   }
+  else
+  {
+    value.reset();
+  }
 
   return in;
 }
 
 template<typename T, std::enable_if_t<!std::is_enum<T>::value, bool> = true>
-auto deserialize(std::istream &in, std::optional<T> &value) -> std::istream &
+inline auto deserialize(std::istream &in, std::optional<T> &value) -> std::istream &
 {
   bool hasValue{false};
-  in >> hasValue;
+  in.read(reinterpret_cast<char *>(&hasValue), sizeof(bool));
   if (hasValue)
   {
     T raw{};
-    in >> raw;
+    deserialize(in, raw);
     value = raw;
   }
   else
