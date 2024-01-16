@@ -8,18 +8,24 @@
 
 namespace utils {
 
-template<typename Enum>
-auto serialize(std::ostream &out, const Enum &e) -> std::ostream &;
+/// https://stackoverflow.com/questions/55647741/template-specialization-with-enable-if
+/// https://en.cppreference.com/w/cpp/types/enable_if
 
-template<typename Enum>
-auto deserialize(std::istream &in, Enum &e) -> std::istream &;
+template<typename T, std::enable_if_t<std::is_enum<T>::value, bool> = true>
+auto serialize(std::ostream &out, const T &e) -> std::ostream &;
+
+template<typename T, std::enable_if_t<!std::is_enum<T>::value, bool> = true>
+auto serialize(std::ostream &out, const T &e) -> std::ostream &;
+
+template<typename T, std::enable_if_t<std::is_enum<T>::value, bool> = true>
+auto deserialize(std::istream &in, T &e) -> std::istream &;
+
+template<typename T, std::enable_if_t<!std::is_enum<T>::value, bool> = true>
+auto deserialize(std::istream &in, T &e) -> std::istream &;
 
 auto serialize(std::ostream &out, const std::string &str) -> std::ostream &;
 
 auto deserialize(std::istream &in, std::string &str) -> std::istream &;
-
-/// https://stackoverflow.com/questions/55647741/template-specialization-with-enable-if
-/// https://en.cppreference.com/w/cpp/types/enable_if
 
 template<typename T, std::enable_if_t<std::is_enum<T>::value, bool> = true>
 auto serialize(std::ostream &out, const std::optional<T> &value) -> std::ostream &;

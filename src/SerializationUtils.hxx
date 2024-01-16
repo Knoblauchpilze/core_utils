@@ -5,27 +5,42 @@
 
 namespace utils {
 
-template<typename Enum>
-inline auto serialize(std::ostream &out, const Enum &e) -> std::ostream &
+template<typename T, std::enable_if_t<std::is_enum<T>::value, bool> = true>
+inline auto serialize(std::ostream &out, const T &e) -> std::ostream &
 {
-  // https://www.reddit.com/r/cpp_questions/comments/30u26m/how_can_i_restrict_e_in_template_typename_e_to_be/
-  static_assert(std::is_enum<Enum>::value, "Expected to be used with enums!");
-
   const auto eAsChar = reinterpret_cast<const char *>(&e);
-  const auto size    = sizeof(typename std::underlying_type<Enum>::type);
+  const auto size    = sizeof(typename std::underlying_type<T>::type);
   out.write(eAsChar, size);
 
   return out;
 }
 
-template<typename Enum>
-inline auto deserialize(std::istream &in, Enum &e) -> std::istream &
+template<typename T, std::enable_if_t<!std::is_enum<T>::value, bool> = true>
+auto serialize(std::ostream &out, const T &value) -> std::ostream &
 {
-  static_assert(std::is_enum<Enum>::value, "Expected to be used with enums!");
+  const auto valueAsChar = reinterpret_cast<const char *>(&value);
+  const auto size        = sizeof(T);
+  out.write(valueAsChar, size);
 
+  return out;
+}
+
+template<typename T, std::enable_if_t<std::is_enum<T>::value, bool> = true>
+inline auto deserialize(std::istream &in, T &e) -> std::istream &
+{
   const auto eAsChar = reinterpret_cast<char *>(&e);
-  const auto size    = sizeof(typename std::underlying_type<Enum>::type);
+  const auto size    = sizeof(typename std::underlying_type<T>::type);
   in.read(eAsChar, size);
+
+  return in;
+}
+
+template<typename T, std::enable_if_t<!std::is_enum<T>::value, bool> = true>
+auto deserialize(std::istream &in, T &value) -> std::istream &
+{
+  const auto valueAsChar = reinterpret_cast<char *>(&value);
+  const auto size        = sizeof(T);
+  in.read(valueAsChar, size);
 
   return in;
 }
