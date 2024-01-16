@@ -107,6 +107,10 @@ auto deserialize(std::istream &in, std::optional<T> &value) -> std::istream &
     in >> raw;
     value = raw;
   }
+  else
+  {
+    value.reset();
+  }
 
   return in;
 }
