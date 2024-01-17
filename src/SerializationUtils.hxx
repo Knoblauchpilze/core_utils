@@ -4,6 +4,7 @@
 #include "SerializationUtils.hh"
 
 namespace utils {
+
 template<typename T, std::enable_if_t<std::is_enum<T>::value, bool> = true>
 inline auto serialize(std::ostream &out, const T &e) -> std::ostream &
 {
@@ -46,7 +47,8 @@ inline auto deserialize(std::istream &in, T &value) -> std::istream &
 
 inline auto serialize(std::ostream &out, const std::string &str) -> std::ostream &
 {
-  out << str.size();
+  const std::size_t size{str.size()};
+  out.write(reinterpret_cast<const char *>(&size), sizeof(std::size_t));
   if (!str.empty())
   {
     out << str;
@@ -58,7 +60,7 @@ inline auto serialize(std::ostream &out, const std::string &str) -> std::ostream
 inline auto deserialize(std::istream &in, std::string &str) -> std::istream &
 {
   std::size_t size{};
-  in >> size;
+  in.read(reinterpret_cast<char *>(&size), sizeof(std::size_t));
   str.resize(size);
   in.read(str.data(), size);
 
