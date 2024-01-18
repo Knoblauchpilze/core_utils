@@ -18,14 +18,14 @@ template<typename T, std::enable_if_t<!std::is_enum<T>::value, bool> = true>
 auto serialize(std::ostream &out, const T &e) -> std::ostream &;
 
 template<typename T, std::enable_if_t<std::is_enum<T>::value, bool> = true>
-auto deserialize(std::istream &in, T &e) -> std::istream &;
+bool deserialize(std::istream &in, T &e);
 
 template<typename T, std::enable_if_t<!std::is_enum<T>::value, bool> = true>
-auto deserialize(std::istream &in, T &e) -> std::istream &;
+bool deserialize(std::istream &in, T &e);
 
 auto serialize(std::ostream &out, const std::string &str) -> std::ostream &;
 
-auto deserialize(std::istream &in, std::string &str) -> std::istream &;
+bool deserialize(std::istream &in, std::string &str);
 
 template<typename T, std::enable_if_t<std::is_enum<T>::value, bool> = true>
 auto serialize(std::ostream &out, const std::optional<T> &value) -> std::ostream &;
@@ -34,10 +34,10 @@ template<typename T, std::enable_if_t<!std::is_enum<T>::value, bool> = true>
 auto serialize(std::ostream &out, const std::optional<T> &value) -> std::ostream &;
 
 template<typename T, std::enable_if_t<std::is_enum<T>::value, bool> = true>
-auto deserialize(std::istream &in, std::optional<T> &value) -> std::istream &;
+bool deserialize(std::istream &in, std::optional<T> &value);
 
 template<typename T, std::enable_if_t<!std::is_enum<T>::value, bool> = true>
-auto deserialize(std::istream &in, std::optional<T> &value) -> std::istream &;
+bool deserialize(std::istream &in, std::optional<T> &value);
 
 } // namespace utils
 
