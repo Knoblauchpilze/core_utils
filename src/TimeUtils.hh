@@ -52,8 +52,8 @@ auto durationToMsString(const Duration &d) noexcept -> std::string;
 /// @param includeFractionalSeconds - whether or not milliseconds should be
 /// included in the output string.
 /// @return - a string representing this duration.
-auto durationToPrettyString(Duration d, const bool includeFractionalSeconds =
-                                            false) noexcept -> std::string;
+auto durationToPrettyString(Duration d, const bool includeFractionalSeconds = false) noexcept
+  -> std::string;
 
 /// @brief - Return the difference in milliseconds between the two input
 /// timestamps using a float value.
@@ -69,15 +69,13 @@ auto diffInMs(const TimeStamp &start, const TimeStamp &end) noexcept -> float;
 /// @param out - the stream into which the `TimeStamp` will be appended.
 /// @param rng - the `TimeStamp` object to serialize.
 /// @return - the modified stream.
-auto operator<<(std::ostream &out, const utils::TimeStamp &t) noexcept
-    -> std::ostream &;
+auto operator<<(std::ostream &out, const utils::TimeStamp &t) noexcept -> std::ostream &;
 
 /// @brief - Deserialization function allowing to extract the representation of
 /// a `TimeStamp` object from the stream.
 /// @param in - the stream from which the timestamp will be generated.
 /// @param t - the timestamp object into which the deserialization is performed.
 /// @return - the modified stream.
-auto operator>>(std::istream &in, utils::TimeStamp &t) noexcept
-    -> std::istream &;
+auto operator>>(std::istream &in, utils::TimeStamp &t) noexcept -> std::istream &;
 
 #include "TimeUtils.hxx"

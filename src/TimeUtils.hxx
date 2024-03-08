@@ -8,21 +8,25 @@
 
 namespace utils {
 
-inline auto now() noexcept -> TimeStamp {
+inline auto now() noexcept -> TimeStamp
+{
   return std::chrono::system_clock::now();
 }
 
-inline auto toMilliseconds(const int ms) noexcept -> Duration {
+inline auto toMilliseconds(const int ms) noexcept -> Duration
+{
   return Milliseconds(ms);
 }
 
-inline auto toMilliseconds(const Duration &d) noexcept -> float {
-  const auto s = std::chrono::duration_cast<Milliseconds>(d);
+inline auto toMilliseconds(const Duration &d) noexcept -> float
+{
+  const auto s  = std::chrono::duration_cast<Milliseconds>(d);
   const auto ms = s.count();
   return 1.0f * ms;
 }
 
-inline auto timeToString(const TimeStamp &t) noexcept -> std::string {
+inline auto timeToString(const TimeStamp &t) noexcept -> std::string
+{
   // See here:
   // https://stackoverflow.com/questions/34857119/how-to-convert-stdchronotime-point-to-string/34858704
   // And here:
@@ -30,9 +34,8 @@ inline auto timeToString(const TimeStamp &t) noexcept -> std::string {
   const auto tt = std::chrono::system_clock::to_time_t(t);
   const auto tm = *std::gmtime(&tt); // GMT (UTC)
 
-  const auto ms =
-      std::chrono::duration_cast<Milliseconds>(t.time_since_epoch()) -
-      std::chrono::duration_cast<std::chrono::seconds>(t.time_since_epoch());
+  const auto ms = std::chrono::duration_cast<Milliseconds>(t.time_since_epoch())
+                  - std::chrono::duration_cast<std::chrono::seconds>(t.time_since_epoch());
 
   std::stringstream ss;
   ss << std::put_time(&tm, "UTC: %Y-%m-%d %H:%M:%S");
@@ -41,17 +44,17 @@ inline auto timeToString(const TimeStamp &t) noexcept -> std::string {
   return ss.str();
 }
 
-inline auto durationToMsString(const Duration &d) noexcept -> std::string {
-  // See here:
+inline auto durationToMsString(const Duration &d) noexcept -> std::string
+{
   // https://stackoverflow.com/questions/22590821/convert-stdduration-to-human-readable-time
-  const auto s = std::chrono::duration_cast<Milliseconds>(d);
+  const auto s  = std::chrono::duration_cast<Milliseconds>(d);
   const auto ms = s.count();
   return std::to_string(ms) + "ms";
 }
 
-inline auto durationToPrettyString(Duration d,
-                                   const bool includeFractionalSeconds) noexcept
-    -> std::string {
+inline auto durationToPrettyString(Duration d, const bool includeFractionalSeconds) noexcept
+  -> std::string
+{
   // https://stackoverflow.com/questions/22590821/convert-stdduration-to-human-readable-time
   const auto h = std::chrono::duration_cast<std::chrono::hours>(d);
   d -= h;
@@ -61,74 +64,82 @@ inline auto durationToPrettyString(Duration d,
   d -= s;
   const auto ms = std::chrono::duration_cast<Milliseconds>(d);
 
-  const auto hours = h.count();
+  const auto hours   = h.count();
   const auto minutes = m.count();
   const auto seconds = s.count();
-  const auto millis = ms.count();
+  const auto millis  = ms.count();
 
   std::stringstream ss;
   ss.fill('0');
-  if (hours) {
+  if (hours)
+  {
     ss << hours << "h";
   }
-  if (0 != hours || 0 != minutes) {
-    if (hours) {
+  if (0 != hours || 0 != minutes)
+  {
+    if (hours)
+    {
       ss << std::setw(2);
     }
     ss << minutes << "m";
   }
-  if (0 != hours || 0 != minutes || 0 != seconds) {
-    if (hours || minutes) {
+  if (0 != hours || 0 != minutes || 0 != seconds)
+  {
+    if (hours || minutes)
+    {
       ss << std::setw(2);
     }
     ss << seconds;
-    if (0 == millis || !includeFractionalSeconds) {
+    if (0 == millis || !includeFractionalSeconds)
+    {
       ss << 's';
     }
   }
 
-  if (0 != millis && includeFractionalSeconds) {
-    if (ss.str().empty()) {
+  if (0 != millis && includeFractionalSeconds)
+  {
+    if (ss.str().empty())
+    {
       ss << "0";
     }
     ss << "." << std::setw(3) << millis << "ms";
   }
 
-  if (0 == hours && 0 == minutes && 0 == seconds &&
-      (0 == millis || !includeFractionalSeconds)) {
+  if (0 == hours && 0 == minutes && 0 == seconds && (0 == millis || !includeFractionalSeconds))
+  {
     return "0s";
   }
 
   return ss.str();
 }
 
-inline auto diffInMs(const TimeStamp &start, const TimeStamp &end) noexcept
-    -> float {
+inline auto diffInMs(const TimeStamp &start, const TimeStamp &end) noexcept -> float
+{
   const auto elapsed = end - start;
-  const auto ms = std::chrono::duration_cast<Milliseconds>(elapsed);
+  const auto ms      = std::chrono::duration_cast<Milliseconds>(elapsed);
   return ms.count();
 }
 
 } // namespace utils
 
-inline auto operator<<(std::ostream &out, const utils::TimeStamp &t) noexcept
-    -> std::ostream & {
+inline auto operator<<(std::ostream &out, const utils::TimeStamp &t) noexcept -> std::ostream &
+{
   // As per this link:
   // https://stackoverflow.com/questions/36963373/saving-and-loading-stdchronotime-point-to-file
-  // We can serialize a timestamp by converting it to its
-  // epoch representation.
+  // We can serialize a timestamp by converting it to its epoch representation.
   const auto et = t.time_since_epoch().count();
   out.write(reinterpret_cast<const char *>(&et), sizeof(et));
   return out;
 }
 
-inline auto operator>>(std::istream &in, utils::TimeStamp &t) noexcept
-    -> std::istream & {
+inline auto operator>>(std::istream &in, utils::TimeStamp &t) noexcept -> std::istream &
+{
   std::chrono::system_clock::rep et;
 
   t = utils::now();
   in.read(reinterpret_cast<char *>(&et), sizeof(et));
-  if (in) {
+  if (in)
+  {
     t = utils::TimeStamp(std::chrono::system_clock::duration{et});
   }
 
